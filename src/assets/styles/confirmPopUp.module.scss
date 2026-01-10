@@ -1,0 +1,89 @@
+@use "_variables" as *;
+@use "sass:color";
+
+/* ===== POPUP OVERLAY ===== */
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  backdrop-filter: blur(3px);
+  z-index: 999;
+}
+
+/* ===== POPUP BOX ===== */
+.popupBox {
+  background: $color-theme;
+  padding: 22px;
+  border-radius: 12px;
+  max-width: 90vw;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+
+  p {
+    color: white;
+    font-size: 1rem;
+    text-align: center;
+    margin: 0;
+  }
+}
+
+.error {
+  font-weight: bold;
+  background-color: $color-error;
+  padding: 1rem;
+  border-radius: 5rem;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: color.scale($color-error, $lightness: -10%);
+  }
+}
+
+/* ===== ACTION BUTTONS (✔ ✘) ===== */
+.popupActions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+
+  button {
+    font-size: 1rem;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border-radius: 8px;
+
+    &.saveBtn {
+      background: $color-success;
+      border: none;
+      color: white;
+      cursor: pointer;
+
+      &:hover {
+        background: color.scale($color-success, $lightness: -10%);
+      }
+    }
+
+    &.cancelBtn {
+      background: $color-error;
+      border: none;
+      color: white;
+      cursor: pointer;
+
+      &:hover {
+        background: color.scale($color-error, $lightness: -10%);
+      }
+    }
+  }
+}

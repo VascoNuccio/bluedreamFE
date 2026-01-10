@@ -1,0 +1,23 @@
+@use './variables' as v;
+@use "sass:color";
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin button-style {
+  background-color: v.$color-theme;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: v.$radius;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: color.adjust(v.$color-theme, $lightness: -10%);
+  }
+}

@@ -1,0 +1,65 @@
+@use '_variables' as *;
+@use "sass:color";
+@use './mixins' as *;
+
+
+form {
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+    label {
+      font-weight: 600;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: $radius;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 1rem;
+      background-color: $color-bg;
+      color: $color-text;
+    }
+    input[type="date"] {
+      background: $color-bg;
+      color: white;
+      color-scheme: dark;
+    }
+    img{
+      width: 1.6rem;
+    }
+    .submitButtonForm {
+       display: flex;
+       justify-content: end;
+       margin-top: 1rem;   
+       button{
+         @include button-style;
+         width: 10rem;
+         padding: 0.8rem 0;
+         font-size: 1rem;
+         background-color: $color-bg;
+         &:hover {
+              background-color: $color-bg;
+         }
+         &:active {
+              background-color: $color-theme-hover;
+         }
+       }
+    }
+}
+
+/* Breakpoint mobile */
+@media (max-width: 480px) {
+  form {
+    input {
+        font-size: 0.95rem;
+    }
+
+    button {
+        font-size: 0.95rem;
+        padding: 0.7rem 0;
+    }
+  }
+}

@@ -1,0 +1,277 @@
+@use '_variables' as *;
+@use "sass:color";
+
+
+.calendarContainer {
+  width: 100%;
+  max-width: 380px;
+  margin: auto;
+  text-align: center;
+  user-select: none;
+  font-family: sans-serif;
+  animation: fadeIn 0.3s ease;
+  padding: 1rem 0;
+}
+
+/* ===========================
+   HEADER
+   =========================== */
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+
+  button {
+    padding: 6px 12px;
+    border: none;
+    background: $color-theme;
+    color: $color-text;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      background: $color-theme-hover;
+    }
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+}
+
+/* ===========================
+   WEEKDAYS (colonne dinamiche)
+   =========================== */
+.weekdays {
+  display: grid;
+  margin-bottom: 5px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+/* ===========================
+   GRID (colonne dinamiche)
+   =========================== */
+.calendarGrid {
+  display: grid;
+  gap: 6px;
+}
+
+/* ===========================
+   DAY BLOCK
+   =========================== */
+.day {
+  padding: 10px;
+  background: $color-theme;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  position: relative;
+  font-size: 0.9rem;
+
+  &:hover {
+    border: 2px solid $color-selected;
+  }
+}
+
+.dayEmpty {
+  padding: 10px;
+  background: transparent;
+}
+
+.selected {
+  border: 3px solid $color-selected !important;
+}
+
+/* ===========================
+   EVENTS STYLE ORIGINALE
+   =========================== */
+.hasEvent {
+  background-color: $color-bg;
+  color: $color-text;
+  border: 2px solid $color-text;
+}
+
+.hasOtherEvent {
+  background-color: $color-theme;
+  color: $color-text;
+  border: 2px solid $color-text;
+}
+
+/* ===========================
+   COLORI GIORNI (NUOVO SISTEMA)
+   =========================== */
+
+/* Giorno con prenotazioni dell’utente (blu intenso) */
+.dayBooked {
+  background: color.adjust($color-bg, $lightness: 5%);
+  color: $color-text;
+  border: 2px solid $color-text;
+
+  &:hover {
+    border: 2px solid $color-selected;
+  }
+}
+
+/* Giorno che ha eventi ma nessuna prenotazione dell’utente (azzurro chiaro) */
+.dayAvailable {
+  background: color.adjust($color-theme, $lightness: 20%);
+  color: $color-text;
+  border: 2px solid transparent;
+
+  &:hover {
+    border: 2px solid $color-selected;
+  }
+}
+
+/* Giorno completamente vuoto → disabilitato */
+.dayDisabled {
+  background: #bfbfbf;
+  color: #666;
+  border: 2px solid #666;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.6;
+
+  &:hover {
+    border: 2px solid #666;
+  }
+}
+
+/* Giorno completamente vuoto → finto disabilitato in admin */
+.dayDisabledAdmin {
+  background: #bfbfbf;
+  color: #666;
+  border: 2px solid #666;
+  opacity: 0.6;
+
+  &:hover {
+    border: 2px solid $color-selected;
+  }
+}
+
+/* ===========================
+   POPUP OVERLAY
+   =========================== */
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+
+.popup {
+  background: $color-text;
+  padding: 20px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 300px;
+  animation: popIn 0.2s ease;
+
+  textarea {
+    width: 100%;
+    height: 90px;
+    margin-top: 10px;
+    padding: 8px;
+    resize: none;
+    border-radius: 8px;
+    border: 1px solid $color-text;
+    font-size: 0.9rem;
+  }
+}
+
+.popupButtons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+  gap: 10px;
+
+  button {
+    padding: 7px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:first-child {
+      background: $color-theme;
+      color: $color-text;
+    }
+
+    &:last-child {
+      background: $color-theme;
+      color: $color-text;
+    }
+  }
+}
+
+.today {
+  border: 4px solid $color-selected !important;
+}
+
+/* ===========================
+   RESPONSIVE MOBILE
+   =========================== */
+@media (max-width: 480px) {
+  .calendarContainer {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.5rem;
+  }
+
+  .calendarHeader h2 {
+    font-size: 1rem;
+    padding: 0 0.5rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  .weekdays {
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  .calendarGrid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  .day {
+    padding: 6px;
+    font-size: 0.75rem;
+  }
+
+  .weekdays div {
+    font-size: 0.6rem;
+  }
+
+  .popup {
+    max-width: 260px;
+    padding: 15px;
+  }
+
+  .popup textarea {
+    height: 70px;
+  }
+}
+
+
+/* ===========================
+   ANIMAZIONI
+   =========================== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

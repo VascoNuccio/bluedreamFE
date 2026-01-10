@@ -1,0 +1,265 @@
+@use "_variables" as *;
+
+.turnoContainer {
+  background: $color-bg;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+  animation: fadeIn 0.2s ease;
+  position: relative; /* per i badge pseudo */
+  transition: box-shadow 0.15s ease, transform 0.12s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+}
+
+/* STATO: quasi pieno / pieno */
+/* utili se non hai variabili, fallback ai colori hex */
+$__warn:  #f0ad4e; /* giallo - quasi pieno */
+$__danger:#d9534f; /* rosso - pieno */
+
+/* Basso a destra - Quasi pieno */
+.turnoContainer.quasiPieno {
+  border-left: 6px solid var(--color-quasi, $__warn);
+  box-shadow: 0 4px 14px rgba(240,173,78,0.07);
+  position: relative;
+
+  &::before {
+    content: "Quasi pieno";
+    position: absolute;
+    bottom: 14px;      /* verticale in linea con il bottone */
+    right: 15px;       /* aderente a destra */
+    background: var(--bg-quasi, $__warn);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transform: translateY(2px); /* ajustamentino fine */
+  }
+}
+
+/* Basso a destra - Pieno */
+.turnoContainer.pieno {
+  border-left: 6px solid var(--color-pieno, $__danger);
+  box-shadow: 0 6px 18px rgba(217,83,79,0.08);
+  opacity: 0.98;
+  position: relative;
+
+  &::before {
+    content: "Pieno";
+    position: absolute;
+    bottom: 14px;
+    right: 15px;
+    background: var(--bg-pieno, $__danger);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transform: translateY(2px);
+  }
+}
+
+
+
+/* ===========================================================
+   HEADER: layout SEMPRE a grid (desktop + mobile)
+   -----------------------------------------------------------*/
+.turnoHeader {
+  display: grid;
+  width: 100%;
+  gap: 6px;
+
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "title ora"
+    "allen info";
+
+  margin-bottom: 10px;
+
+  h4 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: $color-text;
+  }
+}
+
+/* Grid areas */
+.turnoTitle {
+  grid-area: title;
+}
+
+.orarioContainer {
+  grid-area: ora;
+  justify-self: end;
+}
+
+.nomeAllenamento {
+  grid-area: allen;
+}
+
+.infoWrapper {
+  grid-area: info;
+  justify-self: end;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* SVG icona info */
+.infoIcon {
+  width: 2rem;
+  height: 2rem;
+  display: block;
+  fill: $color-theme; /* se svg usa currentColor, usa `color: $color-theme;` */
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  top: 130%;
+  left: 50%;
+  transform: translateX(-80%);
+  background: $color-theme;
+  color: $color-text;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 2px solid $color-text;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+  max-width: 200px;
+  white-space: normal;
+  word-wrap: break-word;
+  text-align: left;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+  z-index: 20;
+}
+
+.infoWrapper:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Info blocco */
+.infoContainer{
+  max-height: 200px;  /* o l’altezza che vuoi */
+  width: -webkit-fill-available;
+  overflow-y: auto;    /* scroll verticale */
+  overflow-x: hidden;  /* niente scroll orizzontale */
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  .turnoInfo {
+    margin-bottom: 12px;
+
+    p {
+      margin: 4px 0;
+      color: $color-text;
+      text-align: left;
+    }
+  }
+
+  .noteInfo{
+    p {
+      margin: 4px 0;
+      color: $color-text;
+      text-align: left;
+      text-wrap: wrap;
+      word-wrap: break-word;
+      word-break: break-all;
+    }
+  }
+}
+
+
+.turnoOra {
+  background: $color-theme;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  color: $color-text;
+}
+
+/* Bottoni */
+.turnoActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.prenotaBtn {
+  padding: 8px 12px;
+  background: $color-theme;
+  color: $color-text;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background: $color-theme-hover;
+  }
+}
+
+.disdiciBtn {
+  padding: 8px 12px;
+  background: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background: #c94541;
+  }
+}
+
+.fullBtn {
+  padding: 8px 12px;
+  background: #777;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: not-allowed;
+}
+
+/* ===========================================================
+   RESPONSIVE (SOLO DIMENSIONI, NON LAYOUT)
+   -----------------------------------------------------------*/
+@media (max-width: 480px) {
+  .turnoContainer {
+    padding: 12px;
+  }
+
+  .turnoHeader h4 {
+    font-size: 1rem;
+  }
+
+  .turnoOra {
+    font-size: 0.85rem;
+    padding: 5px 8px;
+  }
+
+  .turnoActions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+/* Fade-in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

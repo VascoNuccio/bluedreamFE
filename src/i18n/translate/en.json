@@ -1,0 +1,87 @@
+{
+  "navbar": {
+    "timer": "Timer",
+    "training": "Training",
+    "apnea": "Apnea",
+    "apneaTraining": "Apnea Training",
+    "language": "Language"
+  },
+  "training": {
+    "setup": "Set Up",
+    "run": "Run"
+  },
+    "exercise": {
+    "name": "Name",
+    "duration": "Duration",
+    "rest": "Rest",
+    "soundWork": "Work Sound",
+    "soundRest": "Rest Sound"
+  },
+  "tabRun": {
+    "preparation": "Preparation",
+    "work": "Work",
+    "rest": "Rest",
+    "completed": "🏁 Training completed!",
+    "skipStep": "Skip Step",
+    "reset": "Reset"
+  },
+  "tabSetUp": {
+    "title": "Set Up",
+    "repetitions": "Repetitions",
+    "preparation": "Preparation",
+    "finalRest": "Final Rest",
+    "prepOnce": "Preparation and rest only once",
+    "exerciseTitle": "Exercise",
+    "addExercise": "Add Exercise",
+    "saveLoadTitle": "Save / Load Workout",
+    "workoutNamePlaceholder": "Workout name",
+    "saveWorkout": "Save Workout",
+    "savedWorkouts": "Saved workouts:",
+    "load": "Load",
+    "delete": "Delete",
+    "errorNoName": "Please enter a valid workout name",
+    "successSaved": "Workout \"{{name}}\" saved!",
+    "successLoaded": "Workout \"{{name}}\" loaded.",
+    "successDeleted": "Workout \"{{name}}\" deleted."
+  },
+  "apneaTraining": {
+    "setupTitle": "Set Up",
+    "readyTime": "Preparation time",
+    "freedivingTime": "Freediving time",
+    "overTimeSound": "Sound interval",
+    "saveSettings": "Save Settings",
+    "trainingTitle": "Apnea Training",
+    "preparation": "Preparation",
+    "apnea": "Apnea",
+    "start": "Start",
+    "stop": "Stop",
+    "reset": "Reset",
+    "settingsSaved": "Settings saved!"
+  },
+  "apnea": {
+    "title": "Apnea",
+    "start": "Start",
+    "stop": "Stop",
+    "save": "Save",
+    "reset": "Reset",
+    "contractions": "Contractions",
+    "contractionsList": "Contractions:",
+    "totalTime": "Total Time of Apnea:"
+  },
+  "timerPage": {
+    "title": "Timer",
+    "start": "Start",
+    "stop": "Stop",
+    "reset": "Reset"
+  },
+  "modal": {
+    "titleApnea": "Total Time of Apnea",
+    "titleContractions": "Contractions",
+    "previous": "Previous",
+    "new": "New",
+    "none": "-- none --",
+    "keepOld": "Keep Old",
+    "useNew": "Replace",
+    "close": "Close"
+  }
+}

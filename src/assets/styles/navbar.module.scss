@@ -1,0 +1,145 @@
+@use './variables' as *;
+
+.color_bg {
+  color: $color-bg;
+}
+
+.navbar {
+  background-color: $color-theme;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;               // altezza costante
+  width: 100%;                // evita overflow
+  box-sizing: border-box;
+
+  .title {
+    color: $color-text;
+    font-size: 2rem;
+    font-weight: bold;
+    white-space: nowrap;      // evita che vada su due righe
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+
+    a {
+      color: $color-text;
+      text-decoration: none;
+      font-weight: 500;
+      white-space: nowrap;    // evita spaccature su mobile
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+/* Icona utente */
+.user_icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: $color-bg;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;             // evita ridimensionamenti strani su mobile
+}
+
+/* Bottone user */
+.user_button {
+  border: none;
+  color: $color-text;
+  background-color: transparent;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1.5rem;
+  padding: 0;
+}
+
+/* Tooltip Logout */
+.logoutWrapper {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logoutTooltip {
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $color-bg;
+  color: $color-text;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid $color-text;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 200;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0.45rem;
+    border-style: solid;
+    border-color: transparent transparent $color-bg transparent;
+  }
+}
+
+.logoutWrapper:hover .logoutTooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(3px);
+}
+
+
+/* ==========================================
+   📱 MOBILE RESPONSIVE  (max-width: 480px)
+   ========================================== */
+@media (max-width: 480px) {
+
+  .navbar {
+    padding: 0 0.7rem;
+    height: 3.5rem;
+
+    .title {
+      font-size: 1.4rem;
+    }
+
+    .nav-links {
+      gap: 1rem;
+
+      a {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .user_icon {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .user_button {
+    font-size: 1.1rem;
+  }
+
+  /* Tooltip mobile: più vicino e più piccolo */
+  .logoutTooltip {
+    top: 110%;
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+}

@@ -1,0 +1,191 @@
+@use "_variables" as *;
+@use "sass:color";
+
+/* ---------------------------- */
+/*     CONTAINER (usata)        */
+/* ---------------------------- */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* ---------------------------- */
+/*    INPUT ATTIVO MODIFICA     */
+/* ---------------------------- */
+
+.addContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .inputAdd {
+    flex: 1;
+    padding: 6px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background: $color-bg;
+    color: white;
+    width: 100%;
+
+    &::placeholder {
+        color: #999;
+    }
+  }
+
+  .inputAddBlue {
+    flex: 1;
+    padding: 6px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background: $color-bg;
+    color: white;
+    width: 100%;
+    
+    &::placeholder {
+        color: #339cdc;
+    }
+  }
+}
+
+/* ---------------------------- */
+/*    INPUT DISABILITATO        */
+/* ---------------------------- */
+
+.editHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .disabledInput {
+    flex: 1;
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background: $color-bg;
+    color: white;
+
+    &::placeholder {
+      color: #999;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+    }
+  }
+}
+
+.editIcon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: 0.15s ease;
+
+  &:hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.2rem;
+  padding: 0;
+
+  .saveBtn {
+    background: $color-success;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    width: 1rem;
+    padding: 0;
+  
+    &:hover {
+      background: color.scale($color-success, $lightness: -10%);
+    }
+  }
+  
+  .cancelBtn {
+    background: $color-error;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    width: 1rem;
+    padding: 0;
+  
+    &:hover {
+      background: color.scale($color-error, $lightness: -10%);
+    }
+  }
+}
+
+/* ------------------------------------- */
+/*    BUTTON DISABLED INPUT FAKE         */  
+/* ------------------------------------- */
+.fakeInput {
+  width: 100%;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: $color-bg;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.85;
+  font-size: inherit;
+
+  &:hover {
+    opacity: 1;
+    border-color: #666;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #339cdc;
+    box-shadow: 0 0 0 2px rgba(51, 156, 220, 0.25);
+  }
+}
+
+/* ---------------------------- */
+/*    DROPDOWN SUGGERIMENTI     */
+/* ---------------------------- */
+
+.dropdown {
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  right: 0;
+  background: $color-bg;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+  max-height: 220px;
+  overflow-y: auto;
+  width: fit-content;
+}
+
+.dropdownRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.5rem;
+  color: white;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+  gap: 1rem;
+}
+
+.dropdownRow:hover {
+  background: rgba(255, 255, 255, 0.1);
+}

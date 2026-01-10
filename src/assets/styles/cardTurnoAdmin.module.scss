@@ -1,0 +1,111 @@
+@use "_variables" as *;
+@use "sass:color";
+
+.turnoCard {
+  background: $color-theme;
+  padding: 16px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  input {
+    flex: 1;
+    padding: 6px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background: $color-bg;
+    color: white;
+
+    &::placeholder {
+      color: #999;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+    }
+  }
+}
+
+.editIcon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: 0.15s ease;
+
+  &:hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.2rem;
+} 
+
+.saveBtn {
+  background: $color-success;
+  border: none;
+  // padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  width: 1rem;
+
+  &:hover {
+    background: color.scale($color-success, $lightness: -10%);
+  }
+}
+
+.cancelBtn {
+  background: $color-error;
+  border: none;
+  // padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  width: 1rem;
+
+  &:hover {
+    background: color.scale($color-error, $lightness: -10%);
+  }
+}
+
+.removeBtn {
+  background: $color-error;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    background: color.scale($color-error, $lightness: -10%);
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Responsività */
+@media (max-width: 480px) {
+  .turnoCard{
+    padding: 1rem 0.5rem;
+  }
+}

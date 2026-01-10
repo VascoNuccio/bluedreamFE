@@ -1,0 +1,88 @@
+{
+  "navbar": {
+    "timer": "计时器",
+    "training": "训练",
+    "apnea": "屏息",
+    "apneaTraining": "屏息训练",
+    "language": "语言"
+  },
+  "training": {
+    "setup": "设置",
+    "run": "开始"
+  },
+  "exercise": {
+    "name": "名称",
+    "duration": "持续时间",
+    "rest": "休息",
+    "soundWork": "工作提示音",
+    "soundRest": "休息提示音"
+  },
+  "tabRun": {
+    "preparation": "准备",
+    "work": "工作",
+    "rest": "休息",
+    "completed": "🏁 训练完成！",
+    "skipStep": "跳过步骤",
+    "reset": "重置"
+  },
+  "tabSetUp": {
+    "title": "设置",
+    "repetitions": "重复次数",
+    "preparation": "准备时间",
+    "finalRest": "最终休息",
+    "prepOnce": "仅准备和休息一次",
+    "exerciseTitle": "练习",
+    "addExercise": "添加练习",
+    "saveLoadTitle": "保存 / 加载训练",
+    "workoutNamePlaceholder": "训练名称",
+    "saveWorkout": "保存训练",
+    "savedWorkouts": "已保存训练：",
+    "load": "加载",
+    "delete": "删除",
+    "errorNoName": "请输入有效的训练名称",
+    "successSaved": "训练 \"{{name}}\" 已保存！",
+    "successLoaded": "训练 \"{{name}}\" 已加载。",
+    "successDeleted": "训练 \"{{name}}\" 已删除。"
+  },
+  "apneaTraining": {
+    "setupTitle": "设置",
+    "readyTime": "准备时间",
+    "freedivingTime": "屏息时间",
+    "overTimeSound": "提示音间隔",
+    "saveSettings": "保存设置",
+    "trainingTitle": "屏息训练",
+    "preparation": "准备",
+    "apnea": "屏息",
+    "start": "开始",
+    "stop": "停止",
+    "reset": "重置",
+    "settingsSaved": "设置已保存！"
+  },
+  "apnea": {
+    "title": "屏息",
+    "start": "开始",
+    "stop": "停止",
+    "save": "保存",
+    "reset": "重置",
+    "contractions": "收缩",
+    "contractionsList": "收缩：",
+    "totalTime": "屏息总时间："
+  },
+  "timerPage": {
+    "title": "计时器",
+    "start": "开始",
+    "stop": "停止",
+    "reset": "重置"
+  },
+  "modal": {
+    "titleApnea": "呼吸暂停总时间",
+    "titleContractions": "收缩",
+    "previous": "之前",
+    "new": "新的",
+    "none": "-- 无 --",
+    "keepOld": "保留旧数据",
+    "useNew": "替换",
+    "close": "关闭"
+  }
+
+}

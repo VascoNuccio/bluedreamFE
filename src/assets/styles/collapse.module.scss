@@ -1,0 +1,18 @@
+@use '_variables' as *;
+@use "sass:color";
+
+.container {
+  background-color: $color-theme;
+  padding: 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  .title{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    img{
+      width: 1.6rem;
+    }
+  }
+}

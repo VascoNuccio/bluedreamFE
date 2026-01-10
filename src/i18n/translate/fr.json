@@ -1,0 +1,88 @@
+{
+  "navbar": {
+    "timer": "Minuteur",
+    "training": "Entraînement",
+    "apnea": "Apnée",
+    "apneaTraining": "Entraînement Apnée",
+    "language": "Langue"
+  },
+  "training": {
+    "setup": "Configurer",
+    "run": "Démarrer"
+  },
+  "exercise": {
+    "name": "Nom",
+    "duration": "Durée",
+    "rest": "Repos",
+    "soundWork": "Son Travail",
+    "soundRest": "Son Repos"
+  },
+  "tabRun": {
+    "preparation": "Préparation",
+    "work": "Travail",
+    "rest": "Repos",
+    "completed": "🏁 Entraînement terminé !",
+    "skipStep": "Passer l'étape",
+    "reset": "Réinitialiser"
+  },
+  "tabSetUp": {
+    "title": "Configurer",
+    "repetitions": "Répétitions",
+    "preparation": "Préparation",
+    "finalRest": "Repos final",
+    "prepOnce": "Préparation et repos une seule fois",
+    "exerciseTitle": "Exercice",
+    "addExercise": "Ajouter un exercice",
+    "saveLoadTitle": "Sauvegarder / Charger l'entraînement",
+    "workoutNamePlaceholder": "Nom de l'entraînement",
+    "saveWorkout": "Sauvegarder l'entraînement",
+    "savedWorkouts": "Entraînements sauvegardés :",
+    "load": "Charger",
+    "delete": "Supprimer",
+    "errorNoName": "Veuillez entrer un nom d'entraînement valide",
+    "successSaved": "Entraînement \"{{name}}\" sauvegardé !",
+    "successLoaded": "Entraînement \"{{name}}\" chargé.",
+    "successDeleted": "Entraînement \"{{name}}\" supprimé."
+  },
+  "apneaTraining": {
+    "setupTitle": "Configurer",
+    "readyTime": "Temps de préparation",
+    "freedivingTime": "Temps d'apnée",
+    "overTimeSound": "Intervalle sonore",
+    "saveSettings": "Sauvegarder les paramètres",
+    "trainingTitle": "Entraînement Apnée",
+    "preparation": "Préparation",
+    "apnea": "Apnée",
+    "start": "Démarrer",
+    "stop": "Arrêter",
+    "reset": "Réinitialiser",
+    "settingsSaved": "Paramètres sauvegardés !"
+  },
+  "apnea": {
+    "title": "Apnée",
+    "start": "Démarrer",
+    "stop": "Arrêter",
+    "save": "Sauvegarder",
+    "reset": "Réinitialiser",
+    "contractions": "Contractions",
+    "contractionsList": "Contractions :",
+    "totalTime": "Temps total d'apnée :"
+  },
+  "timerPage": {
+    "title": "Minuteur",
+    "start": "Démarrer",
+    "stop": "Arrêter",
+    "reset": "Réinitialiser"
+  },
+  "modal": {
+    "titleApnea": "Durée Totale de l'Apnée",
+    "titleContractions": "Contractions",
+    "previous": "Précédent",
+    "new": "Nouveau",
+    "none": "-- aucun --",
+    "keepOld": "Conserver l'Ancien",
+    "useNew": "Remplacer",
+    "close": "Fermer"
+  }
+
+}
