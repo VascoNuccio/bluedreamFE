@@ -6,18 +6,20 @@ const CaricaQuadrimestre = () => {
   const fileInputRef = useRef(null);
 
   const handleUploadClick = () => fileInputRef.current.click();
+  
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) uploadQuadrimestre(file);
   };
 
   return (
-    <div className="flex gap-4">
-      <button onClick={downloadQuadrimestre} className="px-4 py-2 bg-blue-500 text-white rounded">
+    <section style={{ display: "flex", justifyContent: "center", alignContent: "center", gap: "5rem", padding: "5rem" }}>
+      
+      <button onClick={downloadQuadrimestre} className="button_light">
         Download Excel
       </button>
 
-      <button onClick={handleUploadClick} className="px-4 py-2 bg-green-500 text-white rounded">
+      <button onClick={handleUploadClick} className="button_light">
         Upload Excel
       </button>
 
@@ -28,7 +30,7 @@ const CaricaQuadrimestre = () => {
         accept=".xlsx, .xls"
         style={{ display: "none" }}
       />
-    </div>
+    </section>
   );
 };
 

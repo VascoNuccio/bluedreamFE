@@ -85,6 +85,13 @@ body {
   }
 }
 
+.button_light {
+  @include button-style;
+  width: 100%;
+  padding: 0.8rem 0;
+  font-size: 1rem;
+}
+
 /* Breakpoint mobile */
 @media (max-width: 480px) {
   .container {
@@ -111,5 +118,10 @@ body {
       font-size: 0.95rem;
       padding: 0.7rem 0;
     }
+  }
+
+  .button_light {
+    font-size: 0.95rem;
+    padding: 0.7rem 0;
   }
 }

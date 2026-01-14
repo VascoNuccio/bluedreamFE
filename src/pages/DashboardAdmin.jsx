@@ -6,41 +6,54 @@ import GestioneAllenamenti from '@/components/Admin/gestione/GestioneAllenamenti
 import CaricaQuadrimeste from '@/components/Admin/gestione/CaricaQuadrimestre'
 import styles from '@/assets/styles/dashboardAdmin.module.scss'
 
-const TAB_NAME = {
-  CALENDAR: "Calendario",
-  GESTIONE_USER: "Utenze",
-  GESTIONE_ALLENAMENTI: "Allenamenti",
-  GESTIONE_QUADRIMESTRE: "Carica Quadrimeste"
-}
+const TAB_NAME = [
+  { key: "CALENDAR", label: "Calendario", role: true },
+  { key: "GESTIONE_USER", label: "Utenze", role: true  },
+  { key: "GESTIONE_ALLENAMENTI", label: "Allenamenti", role: true  },
+  { key: "GESTIONE_QUADRIMESTRE", label: "Carica Quadrimeste", role: false  }
+];
 
-const Tab = ({ nameOfSelected, callback }) => {
+const Tab = ({ nameOfSelected, callback, isSuperadmin }) => {
+  // Filtra solo i tab visibili all'utente
+  const visibleTabs = TAB_NAME.filter(tab => {
+
+    // I tab con role false non sono visibili a tutti
+    if(tab.role === false) {
+      if(isSuperadmin) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  });
+
   return (
     <span className={styles.tab}>
-      {Object.values(TAB_NAME).map((tab) => (
+      {visibleTabs.map((tab) => (
         <a
-          key={tab}
-          className={nameOfSelected === tab ? styles.selected : ''}
-          onClick={() => callback(tab)}
+          key={tab.key}
+          className={nameOfSelected === tab.key ? styles.selected : ''}
+          onClick={() => callback(tab.key)}
         >
-          {tab}
+          {tab.label}
         </a>
       ))}
     </span>
   );
 };
 
-const DashboardAdmin = () => {
+const DashboardAdmin = ({isSuperadmin}) => {
   const { user, logout } = useAuth()
 
-  const [tabSelected, setTabSelected] = useState(TAB_NAME.CALENDAR);
+  const [tabSelected, setTabSelected] = useState("CALENDAR");
 
   return (
     <div>
-      <Tab nameOfSelected={tabSelected} callback={setTabSelected} />
-      {tabSelected === TAB_NAME.CALENDAR && <CalendarAdmin />}
-      {tabSelected === TAB_NAME.GESTIONE_USER && <GestioneUser />}
-      {tabSelected === TAB_NAME.GESTIONE_ALLENAMENTI && <GestioneAllenamenti />}
-      {tabSelected === TAB_NAME.GESTIONE_QUADRIMESTRE && <CaricaQuadrimeste />}
+      <Tab nameOfSelected={tabSelected} callback={setTabSelected} isSuperadmin={isSuperadmin}/>
+      {tabSelected === "CALENDAR" && <CalendarAdmin />}
+      {tabSelected === "GESTIONE_USER" && <GestioneUser />}
+      {tabSelected === "GESTIONE_ALLENAMENTI" && <GestioneAllenamenti />}
+      {tabSelected === "GESTIONE_QUADRIMESTRE" && <CaricaQuadrimeste />}
     </div>
   )
 }

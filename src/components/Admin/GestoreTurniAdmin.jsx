@@ -54,7 +54,7 @@ const GestoreTurniAdmin = ({ dateKey, day, monthName, turni = [], onCancel, setT
         <button onClick={onCancel}>Chiudi</button>
       </div>
 
-      {/* LISTA TURNI */}
+      {/* LISTA TURNI
       <div className={styles.turniList}>
         {turni.map((t, index) => (
           <CardTurnoAdmin
@@ -67,7 +67,7 @@ const GestoreTurniAdmin = ({ dateKey, day, monthName, turni = [], onCancel, setT
             removeTurno={()=>removeTurno(t)}
           />
         ))}
-      </div>
+      </div> */}
 
       {/* AGGIUNGI NUOVO TURNO */}
       <CardAddEventAdmin addTurno={addTurno} dateTurno={dateKey} />

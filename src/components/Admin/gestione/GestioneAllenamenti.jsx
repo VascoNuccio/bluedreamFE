@@ -1,75 +1,292 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from "@/context/AuthContext";
+import Collapse from "@/components/Collapse";
+import ConfirmPopup from "@/components/ConfirmPopup";
+import styles from '@/assets/styles/gestioneAllenamenti.module.scss'
 
 const GestioneAllenamenti = () => {
-  const { getAllenamenti, saveNuovoAllenamento } = useAuth();
+  const {
+    createGroup,
+    getAllGroups,
+    updateGroup,
+    deleteGroup,
+    forceDeleteGroup,
+  } = useAuth();
 
   const [allenamenti, setAllenamenti] = useState([]);
-  const [newAllenamento, setNewAllenamento] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  // Carica gli allenamenti dal backend
   const fetchAllenamenti = async () => {
-    try {
-      const data = await getAllenamenti();
-      setAllenamenti(data.allenamenti || []);
-    } catch (err) {
-      console.error("Errore caricamento allenamenti:", err);
-    }
+    const data = await getAllGroups();
+    setAllenamenti(data);
   };
 
   useEffect(() => {
     fetchAllenamenti();
   }, []);
 
-  // Aggiungi nuovo allenamento
-  const handleAdd = async () => {
-    if (!newAllenamento.trim()) return;
-    setLoading(true);
-    try {
-      const data = await saveNuovoAllenamento(newAllenamento);
-      setAllenamenti([...allenamenti, data.category]);
-      setNewAllenamento("");
-    } catch (err) {
-      console.error("Errore durante l'aggiunta:", err);
-      alert(err.message || "Errore durante l'aggiunta");
-    }
-    setLoading(false);
+  const CreateGroup = () => {
+    const [name, setName] = useState();
+    const [description, setDescription] = useState();
+    const [showPopup, setShowPopup] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [message, setMessage] = useState("");
+
+    const handleCreate = async () => {
+      try {
+        if (!name.trim()) {
+          setMessage("Il nome dell'allenamento è obbligatorio");
+          setShowPopup(true);
+        } 
+
+        await createGroup({ name, description });
+        fetchAllenamenti();
+        setName("");
+        setDescription("");
+        setId("");
+      } catch(err) {
+        setMessage(err.message || `Errore durante la creazione dell'allenamento`);
+        setShowPopup(true);
+        setIsError(true);
+      }
+      if(callback) callback();
+    };
+
+    return (
+      <>
+        <form onSubmit={(e)=>{e.preventDefault(); handleCreate();}}>
+          <label>Nome allenamento:</label>
+          <input
+            placeholder="Inserisci nome"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <label>Descrizione allenamento:</label>
+          <input
+            placeholder="Inserisci descrizione"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <div className="submitButtonForm">
+              <button type='submit'>Save</button>
+          </div>
+        </form>
+
+        {showPopup && (
+          <ConfirmPopup
+            message={message}
+            isError={isError}
+            onCancel={() => setShowPopup(false)}
+          />
+        )}
+      </>
+    );
+  };
+
+  const DeleteGroup = () => {
+    const [isConfirmPopUp, setIsConfirmPopUp] = useState(false);
+    const [isForcePopUp, setIsForcePopUp] = useState(false);
+    const [message, setMessage] = useState(null);
+    const [groupToDelete, setGroupToDelete] = useState(null);
+
+    const handleDelete = (group) => {
+      setGroupToDelete(group);
+      setMessage(`Sei sicuro di voler eliminare l'allenamento "${group.name}"?`);
+      setIsConfirmPopUp(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+      try {
+        await deleteGroup(groupToDelete.id);
+        fetchAllenamenti();
+        setIsConfirmPopUp(false);
+      } catch (err) {
+        if (err.type === "HAS_USERS") {
+          setMessage(
+            <div>
+              <p>
+                Il gruppo <strong>{groupToDelete.name}</strong> ha{" "}
+                <strong>{err.data.total}</strong> utenti associati:
+              </p>
+              <ul>
+                {err.data.users.map((u) => (
+                  <li key={u.id}>
+                    {u.firstName} {u.lastName} – {u.email}
+                  </li>
+                ))}
+              </ul>
+              <p>Vuoi eliminare il gruppo e tutte le associazioni?</p>
+            </div>
+          );
+          setIsForcePopUp(true);
+        }
+        setIsConfirmPopUp(false);
+      }
+    };
+
+    const handleForceDelete = async () => {
+      await forceDeleteGroup(groupToDelete.id);
+      fetchAllenamenti();
+      setIsForcePopUp(false);
+    };
+
+    const onCancel = () => {
+      setIsConfirmPopUp(false);
+      setIsForcePopUp(false);
+    };
+
+    return (
+      <>
+        <div className={styles.delete_group_container}>
+          {allenamenti.map((g) => (
+            <div
+              key={g.id}
+              className={styles.delete_group_card}
+              onClick={() => handleDelete(g)}
+            >
+              <p>{g.name}</p>
+            </div>
+          ))}
+        </div>
+
+        {isConfirmPopUp && (
+          <ConfirmPopup
+            message={message}
+            onConfirm={handleDeleteConfirm}
+            onCancel={onCancel}
+            isError={false}
+          />
+        )}
+
+        {isForcePopUp && (
+          <ConfirmPopup
+            message={message}
+            onConfirm={handleForceDelete}
+            onCancel={onCancel}
+            isError={false}
+          />
+        )}
+      </>
+    );
+  };
+
+  const FormUpdateGroup = ({selectGroup, callback}) => {
+    const [name, setName] = useState(selectGroup.name);
+    const [description, setDescription] = useState(selectGroup.description);
+    const [showPopup, setShowPopup] = useState(false);
+    const [message, setMessage] = useState("");
+
+    const handleUpdate = async () => {
+      try {
+        if (!name || name.trim() === "") {
+          setMessage("Il nome dell'allenamento è obbligatorio");
+          setShowPopup(true);
+          setName(selectGroup.name);
+          setDescription(selectGroup.description);
+        }else{
+          await updateGroup(selectGroup.id, { name, description });
+          fetchAllenamenti();
+          setName("");
+          setDescription("");
+        }
+      } catch(err) {
+        setMessage(err.message || `Errore durante l'aggiornamento dell'allenamento`);
+        setShowPopup(true);
+        setName(selectGroup.name);
+        setDescription(selectGroup.description);
+      }
+    };
+
+    return (
+      <>
+        <form onSubmit={(e)=>{e.preventDefault(); handleUpdate();}}>
+          <label>Nome allenamento:</label>
+          <input
+            placeholder="Inserisci nome"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <label>Descrizione allenamento:</label>
+          <input
+            placeholder="Inserisci descrizione"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <section className={styles.buttons_edit_group_section}>
+            <button type='submit'>Save</button>
+            <button type='button' onClick={callback}>Cancel</button>
+          </section>
+        </form>
+
+        {showPopup && (
+          <ConfirmPopup
+            message={message}
+            isError={true}
+            onCancel={() => setShowPopup(false)}
+          />
+        )}
+      </>
+    );
+  };
+
+  const UpdateGroup = () => {
+    const [filteredGroups, setFilteredGroups] = useState(allenamenti);
+    const [selected, setSelected] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+
+    const handleSearchChange = (e) => { 
+      e.preventDefault();
+
+      if(e.target.value.trim() === ""){
+        setFilteredGroups(allenamenti);
+        return;
+      } 
+
+      setFilteredGroups(allenamenti.filter((g) => 
+        g.name.toLowerCase().includes(e.target.value.toLowerCase())
+      ));
+    } 
+    
+    const selectGroup = (g) => {
+      setSelected(g);
+      setIsEditing(true);
+    };
+  
+    return (
+      <>
+        <section className={styles.update_group_section}> 
+        {!isEditing && <>
+          <input className={styles.input_search_group} type="text" placeholder="Search group" onChange={handleSearchChange}/>
+            <div className={styles.update_group_container}>
+            {filteredGroups.map((g) => (
+              <div
+                key={g.id}
+                className={styles.update_group_card}
+                onClick={() => selectGroup(g)}
+              >
+                {g.name}
+              </div>
+            ))}
+          </div>
+        </>}
+        {isEditing && <FormUpdateGroup selectGroup={selected} callback={()=>setIsEditing(false)}/> }
+        </section> 
+      </>
+    );
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Gestione Allenamenti</h2>
+    <div className={styles.container}>
+      <Collapse title="Crea Allenamento">
+        <CreateGroup />
+      </Collapse>
 
-      {/* Form aggiungi allenamento */}
-      <div className="flex mb-6 gap-2">
-        <input
-          type="text"
-          className="border p-2 rounded flex-1"
-          placeholder="Nuovo allenamento"
-          value={newAllenamento}
-          onChange={(e) => setNewAllenamento(e.target.value)}
-        />
-        <button
-          onClick={handleAdd}
-          disabled={loading}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
-        >
-          Aggiungi
-        </button>
-      </div>
+      <Collapse title="Cancella Allenamento">
+        <DeleteGroup />
+      </Collapse>
 
-      {/* Lista allenamenti */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {allenamenti.map((a) => (
-          <div key={a.id} className="border p-4 rounded shadow hover:shadow-lg transition">
-            <h3 className="font-semibold text-lg">{a.name}</h3>
-            {a.equipment && <p className="text-sm text-gray-600">Attrezzatura: {a.equipment}</p>}
-          </div>
-        ))}
-      </div>
-
-      {allenamenti.length === 0 && <p className="text-gray-500 mt-4">Nessun allenamento presente.</p>}
+      <Collapse title="Modifica Allenamento">
+        <UpdateGroup />
+      </Collapse>
     </div>
   );
 };

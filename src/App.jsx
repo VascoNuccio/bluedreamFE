@@ -9,6 +9,7 @@ import Register from './pages/Register'
 
 const ROLE_USER = import.meta.env.VITE_ROLE_USER;
 const ROLE_ADMIN = import.meta.env.VITE_ROLE_ADMIN;
+const ROLE_SUPERADMIN = import.meta.env.VITE_ROLE_SUPERADMIN;
 
 export default function App() {
   const { user } = useAuth()
@@ -44,9 +45,18 @@ export default function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute role={ROLE_ADMIN}>
+            <ProtectedRoute role={[ROLE_ADMIN, ROLE_SUPERADMIN]}>
               <Navbar />
-              <DashboardAdmin />
+              <DashboardAdmin isSuperadmin={false} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/superadmin"
+          element={
+            <ProtectedRoute role={ROLE_SUPERADMIN}>
+              <Navbar />
+              <DashboardAdmin isSuperadmin={true} />
             </ProtectedRoute>
           }
         />

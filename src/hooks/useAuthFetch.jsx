@@ -52,13 +52,12 @@ export default function useAuthFetch({ setUser }) {
   const doFetch = async (path, options = {}, retry = false) => {
     const url = path.startsWith("http") ? path : `${API_BASE}${path}`;
 
-    const headers = {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    };
-
-    // Se non stai inviando FormData, imposta JSON
-    if (!(options.body instanceof FormData)) headers["Content-Type"] = "application/json";
+    const headers = { ...(options.headers || {}) };
+    
+    // Solo se NON sto inviando FormData, imposto JSON
+    if (!(options.body instanceof FormData) && !headers["Content-Type"]) {
+      headers["Content-Type"] = "application/json";
+    }
 
     if (accessTokenRef.current) headers.Authorization = `Bearer ${accessTokenRef.current}`;
 

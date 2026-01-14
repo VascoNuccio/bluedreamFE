@@ -174,18 +174,47 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify(subscriptionData),
     });
 
-  const createGroup = (groupData) =>
-    safeFetch(`/api/admin/groups`, {
+  const getAllGroups = async () =>
+    safeFetch("/api/admin/groups");
+
+  const createGroup = async (payload) =>
+    safeFetch("/api/admin/groups", {
       method: "POST",
-      body: JSON.stringify(groupData),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
 
-  const getAllGroups = () =>
-    safeFetch(`/api/admin/groups`);
+  const updateGroup = async (id, payload) =>
+    safeFetch(`/api/admin/groups/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+  const deleteGroup = async (id) => {
+    try {
+      return await safeFetch(`/api/admin/groups/${id}`, {
+        method: "DELETE",
+      });
+    } catch (err) {
+      if (err?.status === 409) {
+        throw {
+          type: "HAS_USERS",
+          data: err.data,
+        };
+      }
+      throw err;
+    }
+  };
+
+  const forceDeleteGroup = async (id) =>
+    safeFetch(`/api/groups/${id}/force`, {
+      method: "DELETE",
+  });
 
   const downloadQuadrimestre = async () => {
     try {
-      const blob = await safeFetch("/api/admin/download", {
+      const blob = await safeFetch("/api/superadmin/template/download", {
         method: "GET",
         responseType: "blob", // forza blob
       });
@@ -208,7 +237,7 @@ export const AuthProvider = ({ children }) => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await safeFetch("/api/admin/upload", {
+      const res = await safeFetch("/api/superadmin/template/upload", {
         method: "POST",
         body: formData, // authFetch sa gestire FormData
       });
@@ -246,6 +275,9 @@ export const AuthProvider = ({ children }) => {
         createSubscriptionAdmin,
         createGroup,
         getAllGroups,
+        updateGroup,
+        deleteGroup,
+        forceDeleteGroup,
         downloadQuadrimestre,
         uploadQuadrimestre
       }}
