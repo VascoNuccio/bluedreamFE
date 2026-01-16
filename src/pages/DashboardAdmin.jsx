@@ -5,11 +5,13 @@ import GestioneUser from '@/components/Admin/gestione/GestioneUser'
 import GestioneAllenamenti from '@/components/Admin/gestione/GestioneAllenamenti'
 import CaricaQuadrimeste from '@/components/Admin/gestione/CaricaQuadrimestre'
 import styles from '@/assets/styles/dashboardAdmin.module.scss'
+import InfoLivelliCategories from '../components/Admin/gestione/InfoLivelliCategories';
 
 const TAB_NAME = [
   { key: "CALENDAR", label: "Calendario", role: true },
   { key: "GESTIONE_USER", label: "Utenze", role: true  },
   { key: "GESTIONE_ALLENAMENTI", label: "Allenamenti", role: true  },
+  { key: "INFO_LIVELLI_CATEGORIE", label: "Info Livelli Categorie", role: true  },
   { key: "GESTIONE_QUADRIMESTRE", label: "Carica Quadrimeste", role: false  }
 ];
 
@@ -54,6 +56,7 @@ const DashboardAdmin = ({isSuperadmin}) => {
       {tabSelected === "GESTIONE_USER" && <GestioneUser />}
       {tabSelected === "GESTIONE_ALLENAMENTI" && <GestioneAllenamenti />}
       {tabSelected === "GESTIONE_QUADRIMESTRE" && <CaricaQuadrimeste />}
+      {tabSelected === "INFO_LIVELLI_CATEGORIE" && <InfoLivelliCategories />}
     </div>
   )
 }

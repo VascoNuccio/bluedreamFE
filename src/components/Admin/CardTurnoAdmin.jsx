@@ -6,16 +6,17 @@ import PartecipantiDropdownMenu from "@/components/PartecipantiDropdownMenu";
 import Dropdown from "@/components/Dropdown"
 
 // MAIN COMPONENT
-const CardTurnoAdmin = ({ index, date, turno, allenamenti, saveEdit, removeTurno }) => {
+const CardTurnoAdmin = ({ index, date, turno, saveEdit, removeTurno }) => {
+  console.log("Rendering CardTurnoAdmin for turno:", turno);
 
   const [editData, setEditData] = useState({ ...turno });
   const [editingField, setEditingField] = useState(null);
   const [confirmData, setConfirmData] = useState(null);
-  const [allenamentiDropdown, setAllenamentiDropdown] = useState([]);
+  // const [allenamentiDropdown, setAllenamentiDropdown] = useState([]);
 
-  useEffect(() => {
-    setAllenamentiDropdown(allenamenti.map(a => a.nome) || []);
-  }, [allenamenti]);
+  // useEffect(() => {
+  //   setAllenamentiDropdown(allenamenti.map(a => a.nome) || []);
+  // }, [allenamenti]);
 
   const startFieldEdit = (field) => {
     setEditingField(field);
@@ -116,7 +117,7 @@ const CardTurnoAdmin = ({ index, date, turno, allenamenti, saveEdit, removeTurno
   return (
     <div className={styles.turnoCard}>
 
-      {/* NOME ALLENAMENTO */}
+      {/* NOME ALLENAMENTO
       <Dropdown 
         isEditing={true} 
         isVisible={false} 
@@ -124,7 +125,25 @@ const CardTurnoAdmin = ({ index, date, turno, allenamenti, saveEdit, removeTurno
         fields={allenamentiDropdown}
         text={editData.nomeAllenamento} 
         onChange={(value) => handleChange("nomeAllenamento", value)}
-      />
+      /> */}
+
+      {/* TITOLO */}
+      <div className={styles.fieldRow}>
+        <input
+          disabled={editingField !== "title"}
+          value={editData.title}
+          onChange={(e) => handleChange("title", e.target.value)}
+          placeholder="Titolo"
+        />
+        {editingField === "title" ? (
+          <div className={styles.buttonGroup}>
+            <button className={styles.saveBtn} onClick={() => requestConfirm("save", "title")}>✔</button>
+            <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
+          </div>
+        ) : (
+          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("title")} />
+        )}
+      </div>
 
       {/* ORA */}
       <div className={styles.fieldRow}>
@@ -189,13 +208,13 @@ const CardTurnoAdmin = ({ index, date, turno, allenamenti, saveEdit, removeTurno
         )}
       </div>
 
-      {/* PARTECIPANTI */}
+      {/* PARTECIPANTI
       <PartecipantiDropdownMenu
         key={index}
         turno={turno}
         date={date}
         onChange={(updated) => handleChange("partecipanti", updated)}
-      />
+      /> */}
 
       {/* RIMUOVI */}
       <div className={styles.actions}>

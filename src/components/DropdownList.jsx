@@ -1,8 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from "@/assets/styles/dropdown.module.scss";
-import IconEdit from "@/assets/modifica.svg";
 
-const Dropdown = ({placeholder, fields, text, onChange, onCancel}) => {
+const getDisplayValue = (value, key, fallback = '-') => {
+  if (
+    typeof value === 'object' &&
+    value !== null &&
+    !Array.isArray(value)
+  ) {
+    return value[key] ?? fallback;
+  }
+
+  return value ?? fallback;
+};
+
+const Dropdown = ({placeholder, fields, text, valueKey="label", onChange, onCancel}) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const containerRef = useRef(null);
@@ -53,9 +64,9 @@ const Dropdown = ({placeholder, fields, text, onChange, onCancel}) => {
           {/* DROPDOWN */}
           {showDropdown && fields.length > 0 && (
             <div className={styles.dropdown}>
-              {fields.map((e) => (
-                <div key={e} className={styles.dropdownRow}>
-                  <span>{e}</span>
+              {fields.map((e, index) => (
+                <div key={index} className={styles.dropdownRow}>
+                  <span>{getDisplayValue(e, valueKey)}</span>
 
                   <section className={styles.buttonGroup} >
                     <button className={styles.saveBtn} onClick={() => handleSelected(e)}>

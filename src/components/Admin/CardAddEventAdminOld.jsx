@@ -2,40 +2,30 @@ import React, { useEffect, useState } from "react";
 import styles from "@/assets/styles/gestoreTurniAdminFull.module.scss";
 import ConfirmPopup from "@/components/ConfirmPopUp";
 import { useAuth } from '@/context/AuthContext';
-import DropdownList from "@/components/DropdownList";
+import Dropdown from "@/components/Dropdown";
 
 const CardAddEventAdmin = ({ addTurno, dateTurno }) => {
-  const { createEvent, getAllEventCategory } = useAuth();
-
-  const [categoryDropdown, setCategoryDropdown] = useState([]);
-  const [categorySelected, setCategorySelected] = useState();
+  const { saveNuovoTurno } = useAuth();
 
   const [newTurno, setNewTurno] = useState({
+    nomeAllenamento: "",
+    ora: "",
+    postiTotali: "",
+    note: "",
+    date: dateTurno,
+
+
     title: "",
     description: "",
     equipment: "",
     location: "",
-    date: dateTurno,
+    // date: "2025-12-23",
     startTime: "",
     endTime: "",
-    maxSlots: "",
-    note: "",
-    categoryId: null
+    maxSlots: "0",
+    categoryId: 0
+
   });
-
-  useEffect(() => {
-    getAllEventCategory().then((categories) => {
-      setCategoryDropdown(categories);
-
-      const trainingAll = categories.find(
-        c => c.code === 'TRAINING_ALL'
-      );
-      setCategorySelected(trainingAll || null);
-      setNewTurno(prev => ({ ...prev, categoryId: trainingAll ? trainingAll.id : null }));
-    }).catch((err) => {
-      console.error("Errore nel caricamento degli allenamenti per il dropdown", err);
-    });
-  }, [getAllEventCategory]);
 
   const [confirmData, setConfirmData] = useState(null);
 
@@ -103,18 +93,6 @@ const CardAddEventAdmin = ({ addTurno, dateTurno }) => {
       if(!oraRegex.test(newTurno.startTime) || !oraRegex.test(newTurno.endTime)) {
         let mess = messageObj.message? messageObj.message+", " : "";
         messageObj = {error: true, message: mess+"Formato ora non valido (HH:MM)"};
-      } else {
-        // Controllo che startTime non sia dopo endTime
-        const [startH, startM] = newTurno.startTime.split(":").map(Number);
-        const [endH, endM] = newTurno.endTime.split(":").map(Number);
-
-        const startMinutes = startH * 60 + startM;
-        const endMinutes = endH * 60 + endM;
-
-        if(startMinutes > endMinutes) {
-          let mess = messageObj.message ? messageObj.message + ", " : "";
-          messageObj = { error: true, message: mess + "L'orario di inizio non può essere successivo a quello di fine" };
-        }
       }
     }
 
@@ -135,12 +113,6 @@ const CardAddEventAdmin = ({ addTurno, dateTurno }) => {
     setNewTurno({ ...newTurno, [k]: v });
   };
 
-  const handleChangeCategory = (value) => {
-    console.log("Categoria selezionata:", value);
-    handleChange("categoryId", value.id);
-    setCategorySelected(value);
-  };
-
   const handleAdd = () => {
     const messageObj = isErrorMessage(newTurno);
     if (messageObj.error) {
@@ -153,19 +125,14 @@ const CardAddEventAdmin = ({ addTurno, dateTurno }) => {
 
   const confirmAddNewTurno = () => {
     // save db nuovo turno
-    createEvent(newTurno).then((data) => {
-      addTurno(data);
+    saveNuovoTurno(newTurno).then((data) => {
+      addTurno(data.turni);
       setNewTurno({
-        title: "",
-        description: "",
-        equipment: "",
-        location: "",
-        date: dateTurno,
-        startTime: "",
-        endTime: "",
-        maxSlots: "",
+        nomeAllenamento: "",
+        ora: "",
+        postiTotali: "",
         note: "",
-        categoryId: categorySelected ? categorySelected.id : null
+        date: dateTurno
       });
       setConfirmData(null);
     }).catch((err) => {
@@ -178,69 +145,25 @@ const CardAddEventAdmin = ({ addTurno, dateTurno }) => {
   return (
     <div className={styles.addSection}>
       <h3>Aggiungi nuovo turno</h3>
-      
-      <input
-        placeholder="Titolo"
-        value={newTurno.title}
-        onChange={(e) => handleChange("title", e.target.value)}
-      />
+
+      <Dropdown isEditing={false} isVisible={true} placeholder={"Nome allenamento"} fields={allenamentiDropdown} isPlaceholderBlue={true} text={newTurno.nomeAllenamento} onChange={(value) => handleChange("nomeAllenamento", value)}/>
 
       <input
-        placeholder="Descrizione"
-        value={newTurno.description}
-        onChange={(e) => handleChange("description", e.target.value)}
-      />
-
-      <input
-        placeholder="Attrezzatura"
-        value={newTurno.equipment}
-        onChange={(e) => handleChange("equipment", e.target.value)}
-      />
-
-      <input
-        placeholder="Luogo"
-        value={newTurno.location}
-        onChange={(e) => handleChange("location", e.target.value)}
-      />
-
-      <input
-        placeholder="Giorno"
-        value={newTurno.date}
-        onChange={(e) => handleChange("date", e.target.value)}
-      />
-
-      <input
-        placeholder="Ora inizio"
-        value={newTurno.startTime}
-        onChange={(e) => handleChange("startTime", e.target.value)}
-      />
-
-      <input
-        placeholder="Ora fine"
-        value={newTurno.endTime}
-        onChange={(e) => handleChange("endTime", e.target.value)}
+        placeholder="Ora"
+        value={newTurno.ora}
+        onChange={(e) => handleChange("ora", e.target.value)}
       />
 
       <input
         placeholder="Posti Totali"
-        value={newTurno.maxSlots}
-        onChange={(e) => handleChange("maxSlots", e.target.value)}
+        value={newTurno.postiTotali}
+        onChange={(e) => handleChange("postiTotali", e.target.value)}
       />
 
       <input
         placeholder="Note aggiuntive"
         value={newTurno.note}
         onChange={(e) => handleChange("note", e.target.value)}
-      />
-
-      <DropdownList
-        isEditing={true} 
-        isVisible={false} 
-        placeholder={"Categoria evento"} 
-        fields={categoryDropdown}
-        text={categorySelected ? categorySelected.code : ""}
-        valueKey="code"
-        onChange={(value) => handleChangeCategory(value)}
       />
 
       <section className={styles.addButtonSection}>

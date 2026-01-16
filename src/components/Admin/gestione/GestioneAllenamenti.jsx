@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Collapse from "@/components/Collapse";
 import ConfirmPopup from "@/components/ConfirmPopup";
+import DropdownList from "@/components/DropdownList";
 import styles from '@/assets/styles/gestioneAllenamenti.module.scss'
 
 const GestioneAllenamenti = () => {
@@ -11,21 +12,30 @@ const GestioneAllenamenti = () => {
     updateGroup,
     deleteGroup,
     forceDeleteGroup,
+    getAllLevel
   } = useAuth();
 
   const [allenamenti, setAllenamenti] = useState([]);
+  const [livelli, setLivelli] = useState([]);
 
   const fetchAllenamenti = async () => {
     const data = await getAllGroups();
     setAllenamenti(data);
   };
 
+  const fetchLivelli = async () => {
+    const data = await getAllLevel();
+    setLivelli(data);
+  };
+
   useEffect(() => {
     fetchAllenamenti();
+    fetchLivelli();
   }, []);
 
   const CreateGroup = () => {
     const [name, setName] = useState();
+    const [level, setLevel] = useState(livelli.length > 0 ? livelli[0] : "");
     const [description, setDescription] = useState();
     const [showPopup, setShowPopup] = useState(false);
     const [isError, setIsError] = useState(false);
@@ -38,9 +48,15 @@ const GestioneAllenamenti = () => {
           setShowPopup(true);
         } 
 
-        await createGroup({ name, description });
+        if (!level.trim()) {
+          setMessage("Il livello dell'allenamento è obbligatorio");
+          setShowPopup(true);
+        } 
+
+        await createGroup({ name, level, description });
         fetchAllenamenti();
         setName("");
+        setLevel("");
         setDescription("");
         setId("");
       } catch(err) {
@@ -59,6 +75,13 @@ const GestioneAllenamenti = () => {
             placeholder="Inserisci nome"
             value={name}
             onChange={(e) => setName(e.target.value)}
+          />
+          <label>Livello:</label>
+          <DropdownList
+            placeholder="Livello allenamento:"
+            fields={livelli}
+            text={level}
+            onChange={(e) => setLevel(e)}
           />
           <label>Descrizione allenamento:</label>
           <input
@@ -171,6 +194,7 @@ const GestioneAllenamenti = () => {
 
   const FormUpdateGroup = ({selectGroup, callback}) => {
     const [name, setName] = useState(selectGroup.name);
+    const [level, setLevel] = useState(selectGroup.level);
     const [description, setDescription] = useState(selectGroup.description);
     const [showPopup, setShowPopup] = useState(false);
     const [message, setMessage] = useState("");
@@ -181,11 +205,19 @@ const GestioneAllenamenti = () => {
           setMessage("Il nome dell'allenamento è obbligatorio");
           setShowPopup(true);
           setName(selectGroup.name);
+          setLevel(selectGroup.level);
+          setDescription(selectGroup.description);
+        }if (!level.trim()) {
+          setMessage("Il livello dell'allenamento è obbligatorio");
+          setShowPopup(true);
+          setName(selectGroup.name);
+          setLevel(selectGroup.level);
           setDescription(selectGroup.description);
         }else{
-          await updateGroup(selectGroup.id, { name, description });
+          await updateGroup(selectGroup.id, { name, level, description });
           fetchAllenamenti();
           setName("");
+          setLevel("");
           setDescription("");
         }
       } catch(err) {
@@ -204,6 +236,13 @@ const GestioneAllenamenti = () => {
             placeholder="Inserisci nome"
             value={name}
             onChange={(e) => setName(e.target.value)}
+          />
+          <label>Livello:</label>
+          <DropdownList
+            placeholder="Livello allenamento:"
+            fields={livelli}
+            text={level}
+            onChange={(e) => setLevel(e)}
           />
           <label>Descrizione allenamento:</label>
           <input

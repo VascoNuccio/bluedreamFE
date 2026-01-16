@@ -128,9 +128,15 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify({ eventId }),
     });
 
+  const getAllLevel = () =>
+    safeFetch(`/api/user/levels`);
+
   /* ================================ */
   /* ======= ADMIN FUNCTIONS ======== */
   /* ================================ */
+
+  const getAllEventCategory = () =>
+    safeFetch(`/api/admin/event-categories`);
 
   const createUser = (userData) =>
     safeFetch(`/api/admin/users`, {
@@ -264,6 +270,8 @@ export const AuthProvider = ({ children }) => {
         getDayEvents,
         bookEvent,
         cancelEventBooking,
+        getAllLevel,
+        getAllEventCategory,
         createUser,
         updateUser,
         getAllUsers,

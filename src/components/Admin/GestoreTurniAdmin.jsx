@@ -5,7 +5,7 @@ import CardTurnoAdmin from "./CardTurnoAdmin";
 import CardAddEventAdmin from "./CardAddEventAdmin";
 
 const GestoreTurniAdmin = ({ dateKey, day, monthName, turni = [], onCancel, setTurniForDate }) => {
-  const { user, deleteTurno, modificaTurno } = useAuth();
+  const { user, updateEvent, cancelEvent } = useAuth();
   const email = user?.email;
 
   const [editingIndex, setEditingIndex] = useState(null);
@@ -13,35 +13,43 @@ const GestoreTurniAdmin = ({ dateKey, day, monthName, turni = [], onCancel, setT
   const startEdit = (index) => setEditingIndex(index);
   const closeEdit = () => setEditingIndex(null);
 
-  const saveEdit = (index, nameNewField, valueNewField) => {
+  const saveEdit = (index, field, newValue) => {
+    const t = turni[index];
+    if (!t) return;
 
-    // Modifica il turno a db e sincronizza con la risposta
-    const t = [...turni][index];
-    modificaTurno(dateKey, nameNewField, valueNewField , t.ora, t.nomeAllenamento, t.postiTotali, t.partecipanti)
-      .then(data => {
-        setTurniForDate(data.turni);
+    updateEvent(t.id, { [field]: newValue })
+      .then(() => {
+        // aggiorno localmente SOLO il turno modificato
+        const updatedTurni = turni.map((turno, i) =>
+          i === index
+            ? { ...turno, [field]: newValue }
+            : turno
+        );
+
+        setTurniForDate(updatedTurni, { replace: true });
         closeEdit();
       })
-      .catch(err => {
+      .catch(() => {
         console.error("Non è stato possibile modificare il turno");
       });
   };
 
-  const removeTurno = (field) => {
 
+  const removeTurno = (turno) => {
+    if (!turno?.id) return;
 
-    // rimuovo turno a db
-    deleteTurno(dateKey, field.ora, field.nomeAllenamento)
-      .then(data => {
-        setTurniForDate(data.turni);
+    cancelEvent(turno.id)
+      .then(() => {
+        const updatedTurni = turni.filter(t => t.id !== turno.id);
+        setTurniForDate(updatedTurni, { replace: true });
       })
-      .catch(err => {
+      .catch(() => {
         console.error("Non è stato possibile rimuovere il turno");
       });
   };
 
-  const addTurno = (turni) => {
-    setTurniForDate(turni);
+  const addTurno = (turno) => {
+    setTurniForDate(turno);
   };
 
   return (
@@ -54,11 +62,11 @@ const GestoreTurniAdmin = ({ dateKey, day, monthName, turni = [], onCancel, setT
         <button onClick={onCancel}>Chiudi</button>
       </div>
 
-      {/* LISTA TURNI
+      {/* LISTA TURNI */}
       <div className={styles.turniList}>
         {turni.map((t, index) => (
           <CardTurnoAdmin
-            key={index}
+            key={t.id}
             date={dateKey}
             turno={t}
             isEditing={editingIndex === index}
@@ -67,7 +75,7 @@ const GestoreTurniAdmin = ({ dateKey, day, monthName, turni = [], onCancel, setT
             removeTurno={()=>removeTurno(t)}
           />
         ))}
-      </div> */}
+      </div>
 
       {/* AGGIUNGI NUOVO TURNO */}
       <CardAddEventAdmin addTurno={addTurno} dateTurno={dateKey} />
