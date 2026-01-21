@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 const ROLE_USER = import.meta.env.VITE_ROLE_USER;
 const ROLE_ADMIN = import.meta.env.VITE_ROLE_ADMIN;
+const ROLE_SUPERADMIN = import.meta.env.VITE_ROLE_SUPERADMIN;
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -28,6 +29,7 @@ export default function Login() {
       }
 
       if (res.user.role === ROLE_ADMIN) navigate('/admin');
+      else if (res.user.role === ROLE_SUPERADMIN) navigate('/superadmin');
       else if (res.user.role === ROLE_USER) navigate('/user');
       else navigate('/');
 

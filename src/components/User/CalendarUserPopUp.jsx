@@ -58,7 +58,7 @@ const CalendarUserPopup = ({ dateKey, day, monthName, turni = [], onCancel, setT
               key={t.id}
               numero={index + 1}
               titolo={t.title}
-              nomeAllenamento={t.description}
+              description={t.description}
               attrezzatura={t.equipment}
               ora={t.startTime+" - "+t.endTime}
               partecipanti={partecipanti}

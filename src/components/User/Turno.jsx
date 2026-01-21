@@ -6,7 +6,7 @@ import Info from "@/assets/info.svg";
 const Turno = ({
   numero, // index
   titolo, // title
-  nomeAllenamento = "", //description
+  description = "", //description
   ora, // startTime - endTime
   attrezzatura = "", // equipment
   note = "", // note
@@ -50,8 +50,8 @@ const Turno = ({
         </div>
 
         {/* RIGA 2 */}
-        {nomeAllenamento && (
-          <span className={styles.nomeAllenamento}>{nomeAllenamento}</span>
+        {description && (
+          <span className={styles.description}>{description}</span>
         )}
 
         <div className={styles.infoWrapper}>
@@ -72,19 +72,19 @@ const Turno = ({
       <section className={styles.infoContainer}>
         {/* Info turni */}
         <div className={styles.turnoInfo}>
-          <p><strong>Posti liberi:</strong> {postiLiberi}</p>
+          <p><strong>Posti liberi: </strong>{postiLiberi}</p>
         </div>
 
         {/* Info turni */}
         <div className={styles.turnoInfo}>
-          <p><strong>Livello:</strong><span className={canBook?styles.green:styles.red}>{minLevel}</span></p>
+          <p><strong>Livello: <span className={canBook?styles.green:styles.red}>{minLevel}</span></strong></p>
         </div>
 
         {/* Info note */}
-        <div className={styles.noteInfo}>
+        {note && <div className={styles.noteInfo}>
           <p><strong>Note:</strong></p>
           <p>{note}</p>
-        </div>
+        </div>}
       </section>
 
       {/* Bottoni */}

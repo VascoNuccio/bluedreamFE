@@ -20,15 +20,21 @@ export default function App() {
         
         <Route
           path="/"
-          element={user ? (
-            user.role === ROLE_ADMIN ? (
-              <Navigate to="/admin" replace />
+          element={
+            user ? (
+              user.role === ROLE_USER ? (
+                <Navigate to="/user" replace />
+              ) : user.role === ROLE_ADMIN ? (
+                <Navigate to="/admin" replace />
+              ) : user.role === ROLE_SUPERADMIN ? (
+                <Navigate to="/superadmin" replace />
+              ) : (
+                <Login /> // fallback se ruolo non riconosciuto
+              )
             ) : (
-              <Navigate to="/user" replace />
+              <Login />
             )
-          ) : (
-            <Login />
-          )}
+          }
         />
 
         <Route path="/register" element={<Register />} />
