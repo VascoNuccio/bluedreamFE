@@ -16,6 +16,7 @@
 
 /* STATO: quasi pieno / pieno */
 /* utili se non hai variabili, fallback ai colori hex */
+$__ok:    #5cb85c; /* verde - libero */
 $__warn:  #f0ad4e; /* giallo - quasi pieno */
 $__danger:#d9534f; /* rosso - pieno */
 
@@ -100,6 +101,14 @@ $__danger:#d9534f; /* rosso - pieno */
 
 .nomeAllenamento {
   grid-area: allen;
+}
+
+.green {
+  color: $__ok;
+}
+
+.red {
+  color: $__danger;
 }
 
 .infoWrapper {

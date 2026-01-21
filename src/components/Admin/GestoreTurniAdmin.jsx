@@ -5,7 +5,7 @@ import CardTurnoAdmin from "./CardTurnoAdmin";
 import CardAddEventAdmin from "./CardAddEventAdmin";
 
 const GestoreTurniAdmin = ({ dateKey, day, monthName, turni = [], onCancel, setTurniForDate }) => {
-  const { user, updateEvent, cancelEvent } = useAuth();
+  const { user, updateEvent, cancelEvent, restoreEvent, cancelEventHard } = useAuth();
   const email = user?.email;
 
   const [editingIndex, setEditingIndex] = useState(null);
@@ -34,11 +34,38 @@ const GestoreTurniAdmin = ({ dateKey, day, monthName, turni = [], onCancel, setT
       });
   };
 
+  const restoreTurno = (id) => {
+    if (!id) return; 
+    restoreEvent(id)
+      .then(() => {
+        const updatedTurni = turni.map(t =>
+          t.id === id ? { ...t, status: 'SCHEDULED' } : t
+        );
+        setTurniForDate(updatedTurni, { replace: true });
+      })
+      .catch(() => {
+        console.error("Non è stato possibile ripristinare il turno");
+      });
+  };
+
 
   const removeTurno = (turno) => {
     if (!turno?.id) return;
 
     cancelEvent(turno.id)
+      .then(() => {
+        const updatedTurni = turni.filter(t => t.id !== turno.id);
+        setTurniForDate(updatedTurni, { replace: true });
+      })
+      .catch(() => {
+        console.error("Non è stato possibile rimuovere il turno");
+      });
+  };
+
+  const removeTurnoHard = (turno) => {
+    if (!turno?.id) return;
+
+    cancelEventHard(turno.id)
       .then(() => {
         const updatedTurni = turni.filter(t => t.id !== turno.id);
         setTurniForDate(updatedTurni, { replace: true });
@@ -67,12 +94,13 @@ const GestoreTurniAdmin = ({ dateKey, day, monthName, turni = [], onCancel, setT
         {turni.map((t, index) => (
           <CardTurnoAdmin
             key={t.id}
-            date={dateKey}
             turno={t}
             isEditing={editingIndex === index}
             startEdit={() => startEdit(index)}
             saveEdit={(field, value)=>saveEdit(index, field, value)}
             removeTurno={()=>removeTurno(t)}
+            restoreTurno={()=>restoreTurno(t.id)}
+            removeTurnoHard={()=>removeTurnoHard(t)}
           />
         ))}
       </div>

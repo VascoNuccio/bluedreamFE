@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import popupStyles from '@/assets/styles/popupuser.module.scss';
 import Turno from "./Turno";
 import { useAuth } from '@/context/AuthContext';
@@ -42,24 +42,33 @@ const CalendarUserPopup = ({ dateKey, day, monthName, turni = [], onCancel, setT
 
         {turni.length === 0 && <p>Nessun turno disponibile.</p>}
 
-        {turni.map((t, index) => {
+        {[...turni]
+        .sort((a, b) => {
+          // startTime formato "HH:mm"
+          return a.startTime.localeCompare(b.startTime);
+        })
+        .map((t, index) => {
+          console.log("Turno:", t);
           const partecipanti = Array.isArray(t.partecipanti) ? t.partecipanti : [];
-          const total = Number(t.postiTotali) || 0;
-          const isFull = partecipanti.length >= total;
+          const total = Number(t.maxSlots) || 0;
+          const isFull = t.signedUpCount >= total;
 
           return (
             <Turno
-              key={t.id || `${t.ora}-${index}`}
-              numero={t.numero ?? index + 1}
-              nomeAllenamento={t.nomeAllenamento}
-              attrezzatura={t.attrezzatura}
-              ora={t.ora}
+              key={t.id}
+              numero={index + 1}
+              titolo={t.title}
+              nomeAllenamento={t.description}
+              attrezzatura={t.equipment}
+              ora={t.startTime+" - "+t.endTime}
               partecipanti={partecipanti}
               postiTotali={total}
               note={t.note}
               isFull={isFull}
-              onPrenota={() => handlePrenota(index)}
-              onDisdici={() => handleDisdici(index)}
+              minLevel={t.minLevel}
+              canBook={t.canBook}
+              onPrenota={() => handlePrenota(t.id)}
+              onDisdici={() => handleDisdici(t.id)}
             />
           );
         })}

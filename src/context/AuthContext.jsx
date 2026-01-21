@@ -135,7 +135,13 @@ export const AuthProvider = ({ children }) => {
   /* ======= ADMIN FUNCTIONS ======== */
   /* ================================ */
 
-  const getAllEventCategory = () =>
+  const getAdminCalendarEvents = (year, month) =>
+    safeFetch(`/api/admin/all-events/month?year=${year}&month=${month}`);
+
+  const getAdminDayEvents = (year, month, day) =>
+    safeFetch(`/api/admin/all-events/day?year=${year}&month=${month}&day=${day}`);
+
+  const getAllAdminEventCategory = () =>
     safeFetch(`/api/admin/event-categories`);
 
   const createUser = (userData) =>
@@ -173,6 +179,27 @@ export const AuthProvider = ({ children }) => {
 
   const cancelEvent = (eventId) =>
     safeFetch(`/api/admin/events/${eventId}`, { method: "DELETE" });
+
+  const cancelEventHard = (eventId) =>
+    safeFetch(`/api/admin/events/${eventId}/hard`, { method: "DELETE" });
+
+  const restoreEvent = (eventId) =>
+    safeFetch(`/api/admin/events/${eventId}/restore`, { method: "PATCH" });
+
+  const addPartecipantiOnTurno = (eventId, userIds) =>
+    safeFetch(`/api/admin/events/${eventId}/participants`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userIds }),
+    });
+
+  const deletePartecipantiOnTurno = (eventId, userIds) =>
+    safeFetch(`/api/admin/events/${eventId}/participants`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userIds }),
+    });
+
 
   const createSubscriptionAdmin = (subscriptionData) =>
     safeFetch(`/api/admin/subscriptions`, {
@@ -271,7 +298,9 @@ export const AuthProvider = ({ children }) => {
         bookEvent,
         cancelEventBooking,
         getAllLevel,
-        getAllEventCategory,
+        getAdminCalendarEvents,
+        getAdminDayEvents,
+        getAllAdminEventCategory,
         createUser,
         updateUser,
         getAllUsers,
@@ -280,6 +309,10 @@ export const AuthProvider = ({ children }) => {
         createEvent,
         updateEvent,
         cancelEvent,
+        cancelEventHard,
+        restoreEvent,
+        addPartecipantiOnTurno,
+        deletePartecipantiOnTurno,
         createSubscriptionAdmin,
         createGroup,
         getAllGroups,

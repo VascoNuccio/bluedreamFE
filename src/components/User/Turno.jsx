@@ -4,19 +4,25 @@ import { useAuth } from "@/context/AuthContext";
 import Info from "@/assets/info.svg";
 
 const Turno = ({
-  numero,
-  nomeAllenamento = "",
-  ora,
-  attrezzatura = "",
-  note = "",
-  partecipanti = [],
-  postiTotali = 0,
+  numero, // index
+  titolo, // title
+  nomeAllenamento = "", //description
+  ora, // startTime - endTime
+  attrezzatura = "", // equipment
+  note = "", // note
+  partecipanti = [], // partecipanti
+  postiTotali = 0, // maxSlots
+  minLevel, // minLevel
+  canBook, // canBook
   isFull,
   onPrenota,
   onDisdici
 }) => {
 
   const { user } = useAuth();
+
+  console.log("user :", user);
+  console.log("minLevel e canBook :", minLevel, canBook);
 
   const total = Number(postiTotali) || 0;
   const partCount = Array.isArray(partecipanti) ? partecipanti.length : 0;
@@ -37,7 +43,7 @@ const Turno = ({
       <div className={styles.turnoHeader}>
 
         {/* RIGA 1 */}
-        <h4 className={styles.turnoTitle}>Turno {numero ?? "-"}</h4>
+        <h4 className={styles.turnoTitle}>{titolo ?? `Turno ${numero}`}</h4>
 
         <div className={styles.orarioContainer}>
           <span className={styles.turnoOra}>{ora ?? "-"}</span>
@@ -69,6 +75,11 @@ const Turno = ({
           <p><strong>Posti liberi:</strong> {postiLiberi}</p>
         </div>
 
+        {/* Info turni */}
+        <div className={styles.turnoInfo}>
+          <p><strong>Livello:</strong><span className={canBook?styles.green:styles.red}>{minLevel}</span></p>
+        </div>
+
         {/* Info note */}
         <div className={styles.noteInfo}>
           <p><strong>Note:</strong></p>
@@ -78,7 +89,7 @@ const Turno = ({
 
       {/* Bottoni */}
       <div className={styles.turnoActions}>
-        {!isBlocked && !isFull && (
+        {!isBlocked && !isFull && canBook &&(
           <button className={styles.prenotaBtn} onClick={onPrenota}>
             Prenota
           </button>

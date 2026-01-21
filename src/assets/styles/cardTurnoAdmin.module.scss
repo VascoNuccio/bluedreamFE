@@ -67,6 +67,20 @@
   }
 }
 
+.ripristinaBtn {
+  background: $color-success;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    background: color.scale($color-success, $lightness: -10%);
+  }
+}
+
 .cancelBtn {
   background: $color-error;
   border: none;

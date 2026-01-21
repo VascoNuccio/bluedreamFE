@@ -5,8 +5,8 @@ import IconEdit from "@/assets/modifica.svg";
 import styles from "@/assets/styles/partecipantiDropdownMenu.module.scss";
 import { useAuth } from '@/context/AuthContext';
 
-const PartecipantiSelector = ({date, turno, onChange }) => {
-  const { getUsers, deletePartecipanteOnTurno, savePartecipanteOnTurno } = useAuth();
+const PartecipantiSelector = ({turno, onChange, isDisabled = true }) => {
+  const { getAllUsers, deletePartecipantiOnTurno, addPartecipantiOnTurno } = useAuth();
 
   const [selected, setSelected] = useState(turno.partecipanti || []);
   const [search, setSearch] = useState("");
@@ -14,14 +14,14 @@ const PartecipantiSelector = ({date, turno, onChange }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [confirmData, setConfirmData] = useState(null);
-  const [user, setUser] = useState([]);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => { 
     // fetch db get all users
-    getUsers().then(async (data) => {
-      setUser(data.users || []);
+    getAllUsers().then(async (data) => {
+      setUsers(data);
     }).catch((err) => {
-      setUser([]);
+      setUsers([]);
       console.error("Errore caricamento utenti");
     });
   }, []);
@@ -35,14 +35,25 @@ const PartecipantiSelector = ({date, turno, onChange }) => {
   };
 
   const confirmRemove = () => {
-    if (!confirmData) return;
+    if (!confirmData.email) return;
 
-    // query DB delete partecipante
-    deletePartecipanteOnTurno(confirmData.email, date, turno)
-      .then((data) => { 
-        setSelected(data.turno.partecipanti);
-        onChange(data.turno.partecipanti);
-        setConfirmData(null);   
+    const userId = users.find(u => u.email === confirmData.email)?.id;
+    if (!userId) {
+      setConfirmData({email, message: "Non esiste l'utente selezionato", error: true });
+      return;
+    }
+
+    // query DB delete partecipante (ADMIN)
+    deletePartecipantiOnTurno(turno.id, [userId])
+      .then(() => {
+        // aggiorno lo stato LOCALMENTE (optimistic update)
+        const updatedPartecipanti = selected.filter(
+          p => p !== confirmData.email
+        );
+      
+        setSelected(updatedPartecipanti);
+        onChange(updatedPartecipanti);
+        setConfirmData(null);
       })
       .catch((err) => {
         console.error("Errore rimozione partecipante:", err);
@@ -55,58 +66,41 @@ const PartecipantiSelector = ({date, turno, onChange }) => {
     setSearch(value);
     setShowDropdown(true);
 
-    if (value.length < 1) {
-      setSuggestedUsers([]);
+    if (!value || value.trim() === "") {
+      setSuggestedUsers(users);
       return;
     }
 
-    setSuggestedUsers(user.filter((email) =>
-      email.toLowerCase().includes(value.toLowerCase())
-    ));
+    setSuggestedUsers(
+      users.filter(u =>
+        `${u.email} ${u.firstName ?? ''} ${u.lastName ?? ''}`
+          .toLowerCase()
+          .includes(value.toLowerCase())
+      )
+    );
+
   };
 
-  const isErrorMessage = (email) => {
+  const addUser = (user) => {
 
-    if (!email || email.trim() === "") {
-      return { error: true, message: "Non hai selezionato nessun partecipante" };
-    }
-
-    if (selected.includes(email)) {
-      return { error: true, message: "Partecipante già aggiunto" };
-    }
-
-    if (user.length <= 0 || user.length > 0 && !user.includes(email)) {
-      return { error: true, message: "Partecipante non iscritto, registrare l'utente per poterlo aggiungere" };
-    }
-
-    if (turno.postiTotali && selected.length >= turno.postiTotali) {
-      return { error: true, message: "Non ci sono più posti disponibili" };
-    }
-
-    return { error: false, message: "" };
-  }
-
-  const addUser = (email) => {
-    let messageObj = isErrorMessage(email);
-
-    if (messageObj.error){
-      setConfirmData({ email, message: messageObj.message, error: true });
-      return;
-    }
-
-    if (!selected.includes(email)) {
+    if (turno.id && typeof user === "object" && user.id) {
       // query DB insert partecipante
-      savePartecipanteOnTurno(email, date, turno)
-        .then((data) => {
-          let updated = [...selected, email];
-          setSelected(updated);
-          onChange(updated);
+      addPartecipantiOnTurno(turno.id, [user.id])
+        .then(() => {
+          // evita duplicati
+          if (selected.some(u => u.id === user.id)) return;
+        
+          const updatedPartecipanti = [...selected, user.email];
+        
+          setSelected(updatedPartecipanti);
+          onChange(updatedPartecipanti);
         })
         .catch((err) => {
-          console.error("Errore aggiunta partecipante:", err);
+          setConfirmData({message: err.message || "Errore aggiunta partecipante", error: true });
         });
+    }else{
+        setConfirmData({ message: "Devi selezionare un partecipante", error: true });
     }
-
     setSearch("");
     setSuggestedUsers([]);
     setShowDropdown(false);
@@ -130,7 +124,7 @@ const PartecipantiSelector = ({date, turno, onChange }) => {
             className={styles.disabledInput}
             value={selected.join(", ")}
           />
-          <img src={IconEdit} className={styles.editIcon} onClick={() => setEditing(true)} />
+          {isDisabled && <img src={IconEdit} className={styles.editIcon} onClick={() => setEditing(true)} />}
         </div>
       )}
 
@@ -163,12 +157,14 @@ const PartecipantiSelector = ({date, turno, onChange }) => {
           {/* DROPDOWN */}
           {editing && showDropdown && suggestedUsers.length > 0 && (
             <div className={styles.dropdown}>
-              {suggestedUsers.map((email) => (
-                <div key={email} className={styles.dropdownRow}>
-                  <span>{email}</span>
+              {suggestedUsers.map((u) => (
+                <div key={u.id} className={styles.dropdownRow}>
+                  <span>{u.firstName} {u.lastName}</span>
+                  <small>{u.email}</small>
+
 
                   <section className={styles.buttonGroup} >
-                    <button className={styles.saveBtn} onClick={() => addUser(email)}>
+                    <button className={styles.saveBtn} onClick={() => addUser(u)}>
                       ✔
                     </button>
                 

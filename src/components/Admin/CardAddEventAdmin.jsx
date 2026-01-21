@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import DropdownList from "@/components/DropdownList";
 
 const CardAddEventAdmin = ({ addTurno, dateTurno }) => {
-  const { createEvent, getAllEventCategory } = useAuth();
+  const { createEvent, getAllAdminEventCategory } = useAuth();
 
   const [categoryDropdown, setCategoryDropdown] = useState([]);
   const [categorySelected, setCategorySelected] = useState();
@@ -24,7 +24,7 @@ const CardAddEventAdmin = ({ addTurno, dateTurno }) => {
   });
 
   useEffect(() => {
-    getAllEventCategory().then((categories) => {
+    getAllAdminEventCategory().then((categories) => {
       setCategoryDropdown(categories);
 
       const trainingAll = categories.find(
@@ -35,7 +35,7 @@ const CardAddEventAdmin = ({ addTurno, dateTurno }) => {
     }).catch((err) => {
       console.error("Errore nel caricamento degli allenamenti per il dropdown", err);
     });
-  }, [getAllEventCategory]);
+  }, [getAllAdminEventCategory]);
 
   const [confirmData, setConfirmData] = useState(null);
 
@@ -136,7 +136,6 @@ const CardAddEventAdmin = ({ addTurno, dateTurno }) => {
   };
 
   const handleChangeCategory = (value) => {
-    console.log("Categoria selezionata:", value);
     handleChange("categoryId", value.id);
     setCategorySelected(value);
   };

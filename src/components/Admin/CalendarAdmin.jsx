@@ -7,7 +7,7 @@ const pad2 = (n) => String(n).padStart(2, '0');
 const makeDateKey = (y, m, d) => `${y}-${pad2(m)}-${pad2(d)}`;
 
 const CalendarAdmin = () => {
-  const { user, getCalendarEvents, getDayEvents } = useAuth();
+  const { user, getAdminCalendarEvents, getAdminDayEvents } = useAuth();
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(null);
@@ -42,7 +42,7 @@ const CalendarAdmin = () => {
     const load = async () => {
       try {
         //carico gli eventi del mese
-        const data = await getCalendarEvents(year, monthForApi); // <-- aspetta qui
+        const data = await getAdminCalendarEvents(year, monthForApi); // <-- aspetta qui
         if (!active) return;
 
         // rawEvents è ora un array di eventi
@@ -80,7 +80,7 @@ const CalendarAdmin = () => {
 
     load();
     return () => { active = false };
-  }, [user, year, monthForApi, getCalendarEvents, refresh]);
+  }, [user, year, monthForApi, getAdminCalendarEvents, refresh]);
 
   // =========================
   // CALENDARIO
@@ -117,7 +117,7 @@ const CalendarAdmin = () => {
     /** CLICK SU GIORNO - NORMALIZZAZIONE STESSA LOGICA */
     const handleClick = async () => {
       try {
-        const data = await getDayEvents(year, pad2(monthForApi), pad2(d));
+        const data = await getAdminDayEvents(year, pad2(monthForApi), pad2(d));
         const normalizedDay = {};
 
         (data.events || []).forEach(ev => {

@@ -3,20 +3,14 @@ import styles from "@/assets/styles/cardTurnoAdmin.module.scss";
 import IconEdit from "@/assets/modifica.svg";
 import ConfirmPopup from "@/components/ConfirmPopUp";
 import PartecipantiDropdownMenu from "@/components/PartecipantiDropdownMenu";
-import Dropdown from "@/components/Dropdown"
 
 // MAIN COMPONENT
-const CardTurnoAdmin = ({ index, date, turno, saveEdit, removeTurno }) => {
-  console.log("Rendering CardTurnoAdmin for turno:", turno);
+const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, removeTurnoHard }) => {
 
   const [editData, setEditData] = useState({ ...turno });
   const [editingField, setEditingField] = useState(null);
   const [confirmData, setConfirmData] = useState(null);
-  // const [allenamentiDropdown, setAllenamentiDropdown] = useState([]);
-
-  // useEffect(() => {
-  //   setAllenamentiDropdown(allenamenti.map(a => a.nome) || []);
-  // }, [allenamenti]);
+  const isDisabled = turno.status !== 'SCHEDULED'
 
   const startFieldEdit = (field) => {
     setEditingField(field);
@@ -62,8 +56,10 @@ const CardTurnoAdmin = ({ index, date, turno, saveEdit, removeTurno }) => {
     let message = null;
     let messageObj = {error: false, message: ""};
 
-    if(action === "remove"){
+    if(action === "remove" || action === "removeHard"){
       message = "Confermi la rimozione?";
+    }else if(action === "ripristina"){
+      message = "Confermi il ripristino?";
     }else if(action === "save"){
       message = "Confermi il salvataggio?";
       if (messageText) message = messageText;
@@ -82,8 +78,14 @@ const CardTurnoAdmin = ({ index, date, turno, saveEdit, removeTurno }) => {
     if (confirmData.action === "save"){
       saveField(confirmData.field, editData[confirmData.field]);
     } 
+    if (confirmData.action === "ripristina"){
+      restoreTurno();
+    }
     if (confirmData.action === "remove"){
-      removeTurno(confirmData.field);
+      removeTurno();
+    } 
+    if (confirmData.action === "removeHard"){
+      removeTurnoHard();
     } 
 
     setConfirmData(null);
@@ -105,37 +107,20 @@ const CardTurnoAdmin = ({ index, date, turno, saveEdit, removeTurno }) => {
 
   const handleChange = (field, value) => {
     setEditData((prev) => ({ ...prev, [field]: value }));
-
-    if (field === "nomeAllenamento") {
-      const allenamento = allenamenti.find(a => a.nome === value);
-      const attrezzaturaString = allenamento?.attrezzatura?.join(", ") || "";
-      setEditData(prev => ({ ...prev, attrezzatura: attrezzaturaString }));
-      requestConfirm("save", "nomeAllenamento");
-    }
   };
 
   return (
     <div className={styles.turnoCard}>
 
-      {/* NOME ALLENAMENTO
-      <Dropdown 
-        isEditing={true} 
-        isVisible={false} 
-        placeholder={"Nome allenamento"} 
-        fields={allenamentiDropdown}
-        text={editData.nomeAllenamento} 
-        onChange={(value) => handleChange("nomeAllenamento", value)}
-      /> */}
-
       {/* TITOLO */}
       <div className={styles.fieldRow}>
         <input
-          disabled={editingField !== "title"}
+          disabled={editingField !== "title" || isDisabled}
           value={editData.title}
           onChange={(e) => handleChange("title", e.target.value)}
           placeholder="Titolo"
         />
-        {editingField === "title" ? (
+        {editingField === "title" && !isDisabled ? (
           <div className={styles.buttonGroup}>
             <button className={styles.saveBtn} onClick={() => requestConfirm("save", "title")}>✔</button>
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
@@ -148,12 +133,12 @@ const CardTurnoAdmin = ({ index, date, turno, saveEdit, removeTurno }) => {
       {/* ORA */}
       <div className={styles.fieldRow}>
         <input
-          disabled={editingField !== "ora"}
+          disabled={editingField !== "ora" || isDisabled}
           value={editData.ora}
           onChange={(e) => handleChange("ora", e.target.value)}
           placeholder="Orario"
         />
-        {editingField === "ora" ? (
+        {editingField === "ora" && !isDisabled? (
           <div className={styles.buttonGroup}>
             <button className={styles.saveBtn} onClick={() => requestConfirm("save", "ora")}>✔</button>
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
@@ -175,12 +160,12 @@ const CardTurnoAdmin = ({ index, date, turno, saveEdit, removeTurno }) => {
       {/* POSTI TOTALI */}
       <div className={styles.fieldRow}>
         <input
-          disabled={editingField !== "postiTotali"}
+          disabled={editingField !== "postiTotali" || isDisabled}
           value={editData.postiTotali}
           onChange={(e) => handleChange("postiTotali", e.target.value)}
           placeholder="Posti totali"
         />
-        {editingField === "postiTotali" ? (
+        {editingField === "postiTotali" && !isDisabled? (
           <div className={styles.buttonGroup}>
             <button className={styles.saveBtn} onClick={() => requestConfirm("save", "postiTotali")}>✔</button>
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
@@ -193,12 +178,12 @@ const CardTurnoAdmin = ({ index, date, turno, saveEdit, removeTurno }) => {
       {/* NOTE */}
       <div className={styles.fieldRow}>
         <input
-          disabled={editingField !== "note"}
+          disabled={editingField !== "note" || isDisabled}
           value={editData.note}
           onChange={(e) => handleChange("note", e.target.value)}
           placeholder="Note aggiuntive"
         />
-        {editingField === "note" ? (
+        {editingField === "note" && !isDisabled? (
           <div className={styles.buttonGroup}>
             <button className={styles.saveBtn} onClick={() => requestConfirm("save", "note")}>✔</button>
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
@@ -208,17 +193,18 @@ const CardTurnoAdmin = ({ index, date, turno, saveEdit, removeTurno }) => {
         )}
       </div>
 
-      {/* PARTECIPANTI
+      {/* PARTECIPANTI  */}
       <PartecipantiDropdownMenu
-        key={index}
+        isDisabled={!isDisabled}
+        key={turno.id}
         turno={turno}
-        date={date}
         onChange={(updated) => handleChange("partecipanti", updated)}
-      /> */}
+      />
 
-      {/* RIMUOVI */}
+      {/* RIMUOVI - RIPRISTINA */}
       <div className={styles.actions}>
-        <button onClick={() => requestConfirm("remove")} className={styles.removeBtn}>Rimuovi</button>
+        {isDisabled && <button onClick={() => requestConfirm("ripristina")} className={styles.ripristinaBtn}>Ripristina</button> }
+        <button onClick={() => requestConfirm(isDisabled?"removeHard":"remove")} className={styles.removeBtn}>Rimuovi</button>
       </div>
 
       {/* POPUP */}
