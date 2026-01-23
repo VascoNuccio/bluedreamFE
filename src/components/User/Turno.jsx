@@ -90,7 +90,7 @@ const Turno = ({
         {/* Info note */}
         {note && <div className={styles.noteInfo}>
           <p><strong>Note:</strong></p>
-          <p>{note}</p>
+          <p style={{padding: "0rem 1rem"}}>{note}</p>
         </div>}
       </section>
 

@@ -32,14 +32,24 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
       messageObj = {error: true, message: mess+"Descrizione obbligatoria"};
     }
 
-    if(!newTurno.equipment || newTurno.equipment.trim() === "") {
-      let mess = messageObj.message? messageObj.message+", " : "";
-      messageObj = {error: true, message: mess+"Attrezzatura obbligatoria"};
+    let hasEquipment =
+      Array.isArray(newTurno.equipment)
+        ? newTurno.equipment.length > 0
+        : typeof newTurno.equipment === "string"
+          ? newTurno.equipment.trim() !== ""
+          : false;
+
+    if (!hasEquipment) {
+      let mess = messageObj.message ? messageObj.message + ", " : "";
+      messageObj = {
+        error: true,
+        message: mess + "Attrezzatura obbligatoria"
+      };
     }
 
     if(!newTurno.location || newTurno.location.trim() === "") {
       let mess = messageObj.message? messageObj.message+", " : "";
-      messageObj = {error: true, message: mess+"Posto obbligatorio"};
+      messageObj = {error: true, message: mess+"Luogo obbligatorio"};
     }
 
     if(!newTurno.startTime || newTurno.startTime.trim() === "" || !newTurno.endTime || newTurno.endTime.trim() === "") {
@@ -67,12 +77,12 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
       }
     }
 
-    if(!newTurno.maxSlots || newTurno.maxSlots.trim() === "") {
+    if (!Number.isInteger(newTurno.maxSlots) || newTurno.maxSlots <= 0) {
       let mess = messageObj.message? messageObj.message+", " : "";
       messageObj = {error: true, message: mess+"Posti totali obbligatori"};
     }
 
-    if(newTurno.maxSlots && (isNaN(newTurno.maxSlots) || newTurno.maxSlots < 1)) {
+    if (!Number.isInteger(newTurno.maxSlots) || newTurno.maxSlots < 1) {
       let mess = messageObj.message? messageObj.message+", " : "";
       messageObj = {error: true, message: mess+"Deve essere un numero maggiore di 0"};
     }
@@ -91,7 +101,7 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
     }else if(action === "save"){
       message = "Confermi il salvataggio?";
       if (messageText) message = messageText;
-      messageObj = isErrorMessage(field);
+      messageObj = isErrorMessage(editData);
       if (messageObj.error) {
         message = messageObj.message;
       }
