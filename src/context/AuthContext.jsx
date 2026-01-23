@@ -162,6 +162,9 @@ export const AuthProvider = ({ children }) => {
   const disableUser = (userId) =>
     safeFetch(`/api/admin/users/${userId}`, { method: "DELETE" });
 
+  const deleteUser = (userId) =>
+    safeFetch(`/api/admin/users/${userId}/force`, { method: "DELETE" });
+
   const getUserStatuses = () =>
     safeFetch(`/api/admin/users/statuses`);
 
@@ -305,6 +308,7 @@ export const AuthProvider = ({ children }) => {
         updateUser,
         getAllUsers,
         disableUser,
+        deleteUser,
         getUserStatuses,
         createEvent,
         updateEvent,

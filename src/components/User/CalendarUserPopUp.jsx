@@ -4,35 +4,41 @@ import Turno from "./Turno";
 import { useAuth } from '@/context/AuthContext';
 
 const CalendarUserPopup = ({ dateKey, day, monthName, turni = [], onCancel, setTurniForDate }) => {
-  const { user, prenotaTurno, disdiciTurno } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const { user, cancelEventBooking, bookEvent } = useAuth();
+  const [isOpen, setOpen] = useState(false);
   const email = user?.email;
 
-  const handlePrenota = async (index) => {
-    if (!email) return;
-    setLoading(true);
+  const handlePrenota = async (idTurno) => {
+    if (!idTurno) return;
+    
     try {
-      const res = await prenotaTurno(email, dateKey, index); // { success, turno, turni }
+      const res = await bookEvent(idTurno); // { success, turno, turni }
+      console.log("risposta: ",res)
       // aggiornamento lato FE con i turni ritornati dal BE (migliore coerenza)
       setTurniForDate(res.turni || turni);
     } catch (err) {
       console.error("Errore prenotazione:", err);
     } finally {
-      setLoading(false);
+      setOpen(false);
     }
+
+    setOpen(true);
   };
 
   const handleDisdici = async (index) => {
     if (!email) return;
-    setLoading(true);
+    
     try {
-      const res = await disdiciTurno(email, dateKey, index); // { success, turno, turni }
+      const res = await cancelEventBooking(email, dateKey, index); // { success, turno, turni }
+      console.log("risposta: ",res)
       setTurniForDate(res.turni || turni);
     } catch (err) {
       console.error("Errore disdetta:", err);
     } finally {
-      setLoading(false);
+      setOpen(false);
     }
+
+    setOpen(true);
   };
 
   return (
@@ -48,7 +54,6 @@ const CalendarUserPopup = ({ dateKey, day, monthName, turni = [], onCancel, setT
           return a.startTime.localeCompare(b.startTime);
         })
         .map((t, index) => {
-          console.log("Turno:", t);
           const partecipanti = Array.isArray(t.partecipanti) ? t.partecipanti : [];
           const total = Number(t.maxSlots) || 0;
           const isFull = t.signedUpCount >= total;
@@ -74,7 +79,7 @@ const CalendarUserPopup = ({ dateKey, day, monthName, turni = [], onCancel, setT
         })}
 
         <div className={popupStyles.popupButtons}>
-          <button onClick={onCancel} disabled={loading}>Chiudi</button>
+          <button onClick={onCancel} disabled={isOpen}>Chiudi</button>
         </div>
       </div>
     </div>

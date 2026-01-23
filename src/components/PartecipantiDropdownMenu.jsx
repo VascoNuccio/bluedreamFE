@@ -5,7 +5,7 @@ import IconEdit from "@/assets/modifica.svg";
 import styles from "@/assets/styles/partecipantiDropdownMenu.module.scss";
 import { useAuth } from '@/context/AuthContext';
 
-const PartecipantiSelector = ({turno, onChange, isDisabled = true }) => {
+const PartecipantiSelector = ({turno, onChange, isDisabled = true, placeholder }) => {
   const { getAllUsers, deletePartecipantiOnTurno, addPartecipantiOnTurno } = useAuth();
 
   const [selected, setSelected] = useState(turno.partecipanti || []);
@@ -121,6 +121,7 @@ const PartecipantiSelector = ({turno, onChange, isDisabled = true }) => {
         <div className={styles.editHeader}>
           <input
             disabled
+            placeholder={placeholder}
             className={styles.disabledInput}
             value={selected.join(", ")}
           />

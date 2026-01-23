@@ -60,20 +60,53 @@
     .buttons_edit_user_section{
        display: flex;
        justify-content: space-between;
-       margin-top: 1rem;   
-       button{
-         @include button-style;
-         width: 10rem;
-         padding: 0.8rem 0;
-         font-size: 1rem;
-         background-color: $color-bg;
-         &:hover {
-              background-color: $color-bg;
-         }
-         &:active {
-              background-color: $color-theme-hover;
-         }
-       }
+       margin-top: 1rem; 
+      section{
+        display: flex;
+        gap: 1rem;
+      }
+       
+      .saveBtn {
+        background: $color-success;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+
+        &:hover {
+          background: color.scale($color-success, $lightness: -10%);
+        }
+      }
+
+      .cancelBtn {
+        background: $color-bg;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+      
+        &:hover {
+          background: color.scale($color-bg, $lightness: -10%);
+        }
+      }
+
+    .removeBtn {
+      background: $color-error;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    
+      &:hover {
+        background: color.scale($color-error, $lightness: -10%);
+      }
+    }
     }
   }
 }

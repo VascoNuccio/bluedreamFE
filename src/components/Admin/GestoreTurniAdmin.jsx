@@ -3,6 +3,7 @@ import styles from "@/assets/styles/gestoreTurniAdminFull.module.scss";
 import { useAuth } from "@/context/AuthContext";
 import CardTurnoAdmin from "./CardTurnoAdmin";
 import CardAddEventAdmin from "./CardAddEventAdmin";
+import Collapse from "@/components/Collapse";
 
 const GestoreTurniAdmin = ({ dateKey, day, monthName, turni = [], onCancel, setTurniForDate }) => {
   const { user, updateEvent, cancelEvent, restoreEvent, cancelEventHard } = useAuth();
@@ -92,21 +93,25 @@ const GestoreTurniAdmin = ({ dateKey, day, monthName, turni = [], onCancel, setT
       {/* LISTA TURNI */}
       <div className={styles.turniList}>
         {turni.map((t, index) => (
-          <CardTurnoAdmin
-            key={t.id}
-            turno={t}
-            isEditing={editingIndex === index}
-            startEdit={() => startEdit(index)}
-            saveEdit={(field, value)=>saveEdit(index, field, value)}
-            removeTurno={()=>removeTurno(t)}
-            restoreTurno={()=>restoreTurno(t.id)}
-            removeTurnoHard={()=>removeTurnoHard(t)}
-          />
+          <Collapse title={`Modifica ${t?.title ?? "turno"}`} key={t.id}>
+            <CardTurnoAdmin
+              key={t.id}
+              turno={t}
+              isEditing={editingIndex === index}
+              startEdit={() => startEdit(index)}
+              saveEdit={(field, value)=>saveEdit(index, field, value)}
+              removeTurno={()=>removeTurno(t)}
+              restoreTurno={()=>restoreTurno(t.id)}
+              removeTurnoHard={()=>removeTurnoHard(t)}
+            />
+          </Collapse>
         ))}
       </div>
 
       {/* AGGIUNGI NUOVO TURNO */}
-      <CardAddEventAdmin addTurno={addTurno} dateTurno={dateKey} />
+      <Collapse title={`Aggiungi nuovo turno`}>
+        <CardAddEventAdmin addTurno={addTurno} dateTurno={dateKey} />
+      </Collapse>
     </div>
   );
 };

@@ -176,7 +176,6 @@ const CardAddEventAdmin = ({ addTurno, dateTurno }) => {
 
   return (
     <div className={styles.addSection}>
-      <h3>Aggiungi nuovo turno</h3>
       
       <input
         placeholder="Titolo"
@@ -204,6 +203,7 @@ const CardAddEventAdmin = ({ addTurno, dateTurno }) => {
 
       <input
         placeholder="Giorno"
+        disabled
         value={newTurno.date}
         onChange={(e) => handleChange("date", e.target.value)}
       />

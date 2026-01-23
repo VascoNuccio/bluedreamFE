@@ -16,41 +16,69 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
     setEditingField(field);
   };
 
-  const isErrorMessage = (field) => {
-    if(!field) return {error: true, message: "Campo obbligatorio"};
+  const isErrorMessage = (newTurno) => {
 
-    if(field === "nomeAllenamento" && editData.nomeAllenamento.trim() === "") {
-      return {error: true, message: "Nome allenamento obbligatorio"};
+    let messageObj = {error: false, message: ""};
+
+    if(!newTurno) return {error: true, message: "Campo obbligatorio"};
+
+    if(!newTurno.title || newTurno.title.trim() === "") {
+      let mess = messageObj.message? messageObj.message+", " : "";
+      messageObj = {error: true, message: mess+"Titolo obbligatorio"};
     }
 
-    if(field === "attrezzatura" && editData.attrezzatura.trim() === "") {
-      return {error: true, message: "Attrezzatura obbligatoria"};
+    if(!newTurno.description || newTurno.description.trim() === "") {
+      let mess = messageObj.message? messageObj.message+", " : "";
+      messageObj = {error: true, message: mess+"Descrizione obbligatoria"};
     }
 
-    if(field === "ora" && editData.ora.trim() === "") {
-      return {error: true, message: "Orario obbligatorio"};
+    if(!newTurno.equipment || newTurno.equipment.trim() === "") {
+      let mess = messageObj.message? messageObj.message+", " : "";
+      messageObj = {error: true, message: mess+"Attrezzatura obbligatoria"};
     }
 
-    if(field === "ora") {
+    if(!newTurno.location || newTurno.location.trim() === "") {
+      let mess = messageObj.message? messageObj.message+", " : "";
+      messageObj = {error: true, message: mess+"Posto obbligatorio"};
+    }
+
+    if(!newTurno.startTime || newTurno.startTime.trim() === "" || !newTurno.endTime || newTurno.endTime.trim() === "") {
+      let mess = messageObj.message? messageObj.message+", " : "";
+      messageObj = {error: true, message: mess+"Orario obbligatorio"};
+    }
+
+    if(newTurno.startTime && newTurno.endTime) {
       const oraRegex = /^([01]\d|2[0-3]):([0-5]\d)$/; 
-      if(!oraRegex.test(editData.ora)) {
-        return {error: true, message: "Formato ora non valido (HH:MM)"};
+      if(!oraRegex.test(newTurno.startTime) || !oraRegex.test(newTurno.endTime)) {
+        let mess = messageObj.message? messageObj.message+", " : "";
+        messageObj = {error: true, message: mess+"Formato ora non valido (HH:MM)"};
+      } else {
+        // Controllo che startTime non sia dopo endTime
+        const [startH, startM] = newTurno.startTime.split(":").map(Number);
+        const [endH, endM] = newTurno.endTime.split(":").map(Number);
+
+        const startMinutes = startH * 60 + startM;
+        const endMinutes = endH * 60 + endM;
+
+        if(startMinutes > endMinutes) {
+          let mess = messageObj.message ? messageObj.message + ", " : "";
+          messageObj = { error: true, message: mess + "L'orario di inizio non può essere successivo a quello di fine" };
+        }
       }
     }
 
-    if(field === "postiTotali" && editData.postiTotali.trim() === "") {
-      return {error: true, message: "Posti totali obbligatori"};
+    if(!newTurno.maxSlots || newTurno.maxSlots.trim() === "") {
+      let mess = messageObj.message? messageObj.message+", " : "";
+      messageObj = {error: true, message: mess+"Posti totali obbligatori"};
     }
 
-    if(field === "postiTotali" && (isNaN(editData.postiTotali) || editData.postiTotali < 1)) {
-      return {error: true, message: "Deve essere un numero maggiore di 0"};
+    if(newTurno.maxSlots && (isNaN(newTurno.maxSlots) || newTurno.maxSlots < 1)) {
+      let mess = messageObj.message? messageObj.message+", " : "";
+      messageObj = {error: true, message: mess+"Deve essere un numero maggiore di 0"};
     }
 
-    if(field === "postiTotali" && (Array.isArray(editData.partecipanti) && editData.partecipanti.length > (editData.postiTotali || 0))) {
-      return {error: true, message: "I partecipanti superano i posti totali"};
-    }
-    return {error: false, message: ""};
-  }
+    return messageObj;;
+  };
 
   const requestConfirm = (action, field = null, messageText = null) => {
     let message = null;
@@ -130,48 +158,111 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
         )}
       </div>
 
-      {/* ORA */}
+      {/* DESCRIZIONE */}
       <div className={styles.fieldRow}>
         <input
-          disabled={editingField !== "ora" || isDisabled}
-          value={editData.ora}
-          onChange={(e) => handleChange("ora", e.target.value)}
-          placeholder="Orario"
+          disabled={editingField !== "description" || isDisabled}
+          value={editData.description}
+          onChange={(e) => handleChange("description", e.target.value)}
+          placeholder="Descrizione"
         />
-        {editingField === "ora" && !isDisabled? (
+        {editingField === "description" && !isDisabled ? (
           <div className={styles.buttonGroup}>
-            <button className={styles.saveBtn} onClick={() => requestConfirm("save", "ora")}>✔</button>
+            <button className={styles.saveBtn} onClick={() => requestConfirm("save", "description")}>✔</button>
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
           </div>
         ) : (
-          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("ora")} />
+          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("description")} />
         )}
       </div>
 
       {/* ATTREZZATURA */}
       <div className={styles.fieldRow}>
         <input
-          disabled={true}
-          value={editData.attrezzatura}
+          disabled={editingField !== "equipment" || isDisabled}
+          value={editData.equipment}
+          onChange={(e) => handleChange("equipment", e.target.value)}
+          placeholder="Attrezzatura"
         />
-        <div style={{width: "20px", height: "20px",     backgroundColor: "transparent"}}></div>
+        {editingField === "equipment" && !isDisabled ? (
+          <div className={styles.buttonGroup}>
+            <button className={styles.saveBtn} onClick={() => requestConfirm("save", "equipment")}>✔</button>
+            <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
+          </div>
+        ) : (
+          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("equipment")} />
+        )}
+      </div>
+
+      {/* LUOGO */}
+      <div className={styles.fieldRow}>
+        <input
+          disabled={editingField !== "location" || isDisabled}
+          value={editData.location}
+          onChange={(e) => handleChange("location", e.target.value)}
+          placeholder="Luogo"
+        />
+        {editingField === "location" && !isDisabled ? (
+          <div className={styles.buttonGroup}>
+            <button className={styles.saveBtn} onClick={() => requestConfirm("save", "location")}>✔</button>
+            <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
+          </div>
+        ) : (
+          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("location")} />
+        )}
+      </div>
+
+      {/* ORA INIZIO */}
+      <div className={styles.fieldRow}>
+        <input
+          disabled={editingField !== "startTime" || isDisabled}
+          value={editData.startTime}
+          onChange={(e) => handleChange("startTime", e.target.value)}
+          placeholder="Orario inizio"
+        />
+        {editingField === "startTime" && !isDisabled? (
+          <div className={styles.buttonGroup}>
+            <button className={styles.saveBtn} onClick={() => requestConfirm("save", "startTime")}>✔</button>
+            <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
+          </div>
+        ) : (
+          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("startTime")} />
+        )}
+      </div>
+
+      {/* ORA FINE */}
+      <div className={styles.fieldRow}>
+        <input
+          disabled={editingField !== "endTime" || isDisabled}
+          value={editData.endTime}
+          onChange={(e) => handleChange("endTime", e.target.value)}
+          placeholder="Orario fine"
+        />
+        {editingField === "endTime" && !isDisabled? (
+          <div className={styles.buttonGroup}>
+            <button className={styles.saveBtn} onClick={() => requestConfirm("save", "endTime")}>✔</button>
+            <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
+          </div>
+        ) : (
+          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("endTime")} />
+        )}
       </div>
 
       {/* POSTI TOTALI */}
       <div className={styles.fieldRow}>
         <input
-          disabled={editingField !== "postiTotali" || isDisabled}
-          value={editData.postiTotali}
-          onChange={(e) => handleChange("postiTotali", e.target.value)}
+          disabled={editingField !== "maxSlots" || isDisabled}
+          value={editData.maxSlots}
+          onChange={(e) => handleChange("maxSlots", e.target.value)}
           placeholder="Posti totali"
         />
-        {editingField === "postiTotali" && !isDisabled? (
+        {editingField === "maxSlots" && !isDisabled? (
           <div className={styles.buttonGroup}>
-            <button className={styles.saveBtn} onClick={() => requestConfirm("save", "postiTotali")}>✔</button>
+            <button className={styles.saveBtn} onClick={() => requestConfirm("save", "maxSlots")}>✔</button>
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
           </div>
         ) : (
-          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("postiTotali")} />
+          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("maxSlots")} />
         )}
       </div>
 
@@ -198,6 +289,7 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
         isDisabled={!isDisabled}
         key={turno.id}
         turno={turno}
+        placeholder="Partecipanti"
         onChange={(updated) => handleChange("partecipanti", updated)}
       />
 

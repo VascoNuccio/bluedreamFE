@@ -21,13 +21,21 @@ const Turno = ({
 
   const { user } = useAuth();
 
-  console.log("user :", user);
-  console.log("minLevel e canBook :", minLevel, canBook);
 
   const total = Number(postiTotali) || 0;
   const partCount = Array.isArray(partecipanti) ? partecipanti.length : 0;
-  const quasiPieno = total > 0 ? (partCount / total) >= 0.7 : false;
   const postiLiberi = Math.max(0, total - partCount);
+  // Regole:
+  // - eventi piccoli: 1 o 2 posti → quasi pieno se ne manca ≤ 1
+  // - eventi medi/grandi: >= 70% occupati
+  const quasiPieno =
+    total === 1
+      ? true
+      : total === 2
+        ? postiLiberi <= 1
+        : total > 0
+          ? (partCount / total) >= 0.7
+          : false;
 
   const isBlocked = partecipanti.some(p => p === user?.email);
 
