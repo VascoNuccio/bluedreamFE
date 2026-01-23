@@ -2,43 +2,32 @@ import React, { useEffect, useState } from "react";
 import popupStyles from '@/assets/styles/popupuser.module.scss';
 import Turno from "./Turno";
 import { useAuth } from '@/context/AuthContext';
+import ConfirmPopUp from "@/components/ConfirmPopUp";
 
-const CalendarUserPopup = ({ dateKey, day, monthName, turni = [], onCancel, setTurniForDate }) => {
-  const { user, cancelEventBooking, bookEvent } = useAuth();
-  const [isOpen, setOpen] = useState(false);
-  const email = user?.email;
+const CalendarUserPopup = ({ day, monthName, turni = [], onCancel, refresh }) => {
+  const { cancelEventBooking, bookEvent } = useAuth();
+  const [isMessageError, setMessageError] = useState(false);
 
   const handlePrenota = async (idTurno) => {
     if (!idTurno) return;
     
     try {
-      const res = await bookEvent(idTurno); // { success, turno, turni }
-      console.log("risposta: ",res)
-      // aggiornamento lato FE con i turni ritornati dal BE (migliore coerenza)
-      setTurniForDate(res.turni || turni);
+      const res = await bookEvent(idTurno);
+      refresh();
     } catch (err) {
-      console.error("Errore prenotazione:", err);
-    } finally {
-      setOpen(false);
+      setMessageError({message: err.message??"Errore prenotazione:", error: true})
     }
-
-    setOpen(true);
   };
 
-  const handleDisdici = async (index) => {
-    if (!email) return;
+  const handleDisdici = async (idTurno) => {
+    if (!idTurno) return;
     
     try {
-      const res = await cancelEventBooking(email, dateKey, index); // { success, turno, turni }
-      console.log("risposta: ",res)
-      setTurniForDate(res.turni || turni);
+      const res = await cancelEventBooking(idTurno);
+      refresh();
     } catch (err) {
-      console.error("Errore disdetta:", err);
-    } finally {
-      setOpen(false);
+      setMessageError({message: err.message??"Errore disdetta:", error: true})
     }
-
-    setOpen(true);
   };
 
   return (
@@ -54,9 +43,6 @@ const CalendarUserPopup = ({ dateKey, day, monthName, turni = [], onCancel, setT
           return a.startTime.localeCompare(b.startTime);
         })
         .map((t, index) => {
-          const partecipanti = Array.isArray(t.partecipanti) ? t.partecipanti : [];
-          const total = Number(t.maxSlots) || 0;
-          const isFull = t.signedUpCount >= total;
 
           return (
             <Turno
@@ -66,10 +52,10 @@ const CalendarUserPopup = ({ dateKey, day, monthName, turni = [], onCancel, setT
               description={t.description}
               attrezzatura={t.equipment}
               ora={t.startTime+" - "+t.endTime}
-              partecipanti={partecipanti}
-              postiTotali={total}
+              partecipanti={Array.isArray(t.partecipanti) ? t.partecipanti : []}
+              postiTotali={Number(t.maxSlots) || 0}
               note={t.note}
-              isFull={isFull}
+              isFull={t.signedUpCount >= (Number(t.maxSlots) || 0)}
               minLevel={t.minLevel}
               canBook={t.canBook}
               onPrenota={() => handlePrenota(t.id)}
@@ -79,9 +65,10 @@ const CalendarUserPopup = ({ dateKey, day, monthName, turni = [], onCancel, setT
         })}
 
         <div className={popupStyles.popupButtons}>
-          <button onClick={onCancel} disabled={isOpen}>Chiudi</button>
+          <button onClick={onCancel} >Chiudi</button>
         </div>
       </div>
+      {isMessageError && <ConfirmPopUp message={isMessageError?.message} onCancel={()=>setMessageError(false)} isError = {isMessageError?.error}/>}
     </div>
   );
 };

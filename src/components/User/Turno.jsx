@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "@/assets/styles/turno.module.scss";
 import { useAuth } from "@/context/AuthContext";
 import Info from "@/assets/info.svg";
@@ -20,7 +20,6 @@ const Turno = ({
 }) => {
 
   const { user } = useAuth();
-
 
   const total = Number(postiTotali) || 0;
   const partCount = Array.isArray(partecipanti) ? partecipanti.length : 0;
