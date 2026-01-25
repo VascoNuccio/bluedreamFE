@@ -46,25 +46,27 @@ const GestioneAllenamenti = () => {
         if (!name.trim()) {
           setMessage("Il nome dell'allenamento è obbligatorio");
           setShowPopup(true);
-        } 
-
-        if (!level.trim()) {
+          setIsError(true);
+        } else if (!level.trim()) {
           setMessage("Il livello dell'allenamento è obbligatorio");
           setShowPopup(true);
-        } 
-
-        await createGroup({ name, level, description });
-        fetchAllenamenti();
-        setName("");
-        setLevel("");
-        setDescription("");
-        setId("");
+          setIsError(true);
+        } else{
+          await createGroup({ name, level, description });
+          fetchAllenamenti();
+          setMessage("Allenamento creato");
+          setShowPopup(true);
+          setIsError(false);
+          setName("");
+          setLevel("");
+          setDescription("");
+          setId("");
+        }
       } catch(err) {
         setMessage(err.message || `Errore durante la creazione dell'allenamento`);
         setShowPopup(true);
         setIsError(true);
       }
-      if(callback) callback();
     };
 
     return (
@@ -98,7 +100,7 @@ const GestioneAllenamenti = () => {
           <ConfirmPopup
             message={message}
             isError={isError}
-            onCancel={() => setShowPopup(false)}
+            onCancel={() =>{setShowPopup(false), setIsError(false)}}
           />
         )}
       </>
