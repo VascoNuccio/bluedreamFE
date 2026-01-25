@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import Payments from "../components/Payments/Payments";
+import Payments from "../components/payments/Payments";
 
 export default function Register() {
   const [email, setEmail] = useState("");
