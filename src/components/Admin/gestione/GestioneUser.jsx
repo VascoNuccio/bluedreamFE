@@ -38,6 +38,7 @@ const GestioneUser = () => {
   const CreateUserForm = () => {
 
     const [showPassword, setShowPassword] = React.useState(false);
+    const [showPopUp, setShowPopUp] = React.useState(false);
 
     const formatDateForInput = (date) => {
       return date.toISOString().split('T')[0];
@@ -112,7 +113,20 @@ const GestioneUser = () => {
       }));
     };
 
-    return <form onSubmit={(e)=>{e.preventDefault(); createUser(newUser)}}>
+    const handleCreateUser = () =>{
+      try {
+        createUser(newUser)
+        setShowPopUp({message: "Creato utente", isError: false});
+      } catch (error) {
+        setShowPopUp({message: err.error || "errore creazione user", isError: true});
+      }
+    }
+
+    const onClose = () => {
+      showPopUp(false);
+    }
+
+    return <form onSubmit={handleCreateUser}>
       <label>Email:</label>
       <input type="email" placeholder="email" autoComplete="new-email" name='email' value={newUser.email} onChange={handeChangeUser}/>
       <label>Password:</label>
@@ -185,6 +199,7 @@ const GestioneUser = () => {
       <div className="submitButtonForm">
           <button type='submit'>Save</button>
       </div>
+      {showPopUp && <ConfirmPopUp message={showPopUp.message} onConfirm={onClose} onCancel={onClose} isError={showPopUp.isError}/>}
     </form>
   }
 
@@ -337,8 +352,7 @@ const GestioneUser = () => {
         let updatedSubscriptions;
       
         const activeSub = subscriptions.find(sub => sub.status === 'ACTIVE');
-        console.log("subscription active find? ",activeSub)
-      
+
         if (activeSub) {
           updatedSubscriptions = subscriptions.map(sub =>
             sub.status === 'ACTIVE'
@@ -407,7 +421,11 @@ const GestioneUser = () => {
         setData(prev => ({ ...prev, users }));
         setIsEditing(false);
       } catch (err) {
-        console.error('Errore aggiornamento user:', err);
+        console.error(err)
+        setShowPopUp({
+          message: err.message || err,
+          isError: true,
+        });
       }
     };
 
