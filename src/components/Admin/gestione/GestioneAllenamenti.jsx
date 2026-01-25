@@ -34,9 +34,9 @@ const GestioneAllenamenti = () => {
   }, []);
 
   const CreateGroup = () => {
-    const [name, setName] = useState();
+    const [name, setName] = useState("");
     const [level, setLevel] = useState(livelli.length > 0 ? livelli[0] : "");
-    const [description, setDescription] = useState();
+    const [description, setDescription] = useState("");
     const [showPopup, setShowPopup] = useState(false);
     const [isError, setIsError] = useState(false);
     const [message, setMessage] = useState("");
@@ -52,15 +52,12 @@ const GestioneAllenamenti = () => {
           setShowPopup(true);
           setIsError(true);
         } else{
+          console.log("test")
           await createGroup({ name, level, description });
           fetchAllenamenti();
           setMessage("Allenamento creato");
           setShowPopup(true);
           setIsError(false);
-          setName("");
-          setLevel("");
-          setDescription("");
-          setId("");
         }
       } catch(err) {
         setMessage(err.message || `Errore durante la creazione dell'allenamento`);
@@ -100,6 +97,7 @@ const GestioneAllenamenti = () => {
           <ConfirmPopup
             message={message}
             isError={isError}
+            onConfirm={() =>{setShowPopup(false), setIsError(false)}}
             onCancel={() =>{setShowPopup(false), setIsError(false)}}
           />
         )}
