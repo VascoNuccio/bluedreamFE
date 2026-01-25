@@ -52,12 +52,11 @@ const GestioneAllenamenti = () => {
           setShowPopup(true);
           setIsError(true);
         } else{
-          console.log("test")
           await createGroup({ name, level, description });
-          fetchAllenamenti();
+          await fetchAllenamenti();
           setMessage("Allenamento creato");
-          setShowPopup(true);
           setIsError(false);
+          setShowPopup(true);
         }
       } catch(err) {
         setMessage(err.message || `Errore durante la creazione dell'allenamento`);
@@ -68,7 +67,7 @@ const GestioneAllenamenti = () => {
 
     return (
       <>
-        <form onSubmit={(e)=>{e.preventDefault(); handleCreate();}}>
+        <form onSubmit={handleCreate}>
           <label>Nome allenamento:</label>
           <input
             placeholder="Inserisci nome"
@@ -120,7 +119,7 @@ const GestioneAllenamenti = () => {
     const handleDeleteConfirm = async () => {
       try {
         await deleteGroup(groupToDelete.id);
-        fetchAllenamenti();
+        await fetchAllenamenti();
         setIsConfirmPopUp(false);
       } catch (err) {
         if (err.type === "HAS_USERS") {
