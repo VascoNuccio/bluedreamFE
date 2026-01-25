@@ -67,7 +67,7 @@ const GestioneAllenamenti = () => {
 
     return (
       <>
-        <form onSubmit={handleCreate}>
+        <form onSubmit={()=>{handleCreate()}}>
           <label>Nome allenamento:</label>
           <input
             placeholder="Inserisci nome"
