@@ -33,6 +33,7 @@ const eventRules = {
   TRAINING_ADVANCED: { label: 'Allenamento Advanced', requiresSubscription: true, allowedLevels: ['ADVANCED'] },
   TRAINING_DEPTH: { label: 'Allenamento Depth', requiresSubscription: true, allowedLevels: ['DEPTH'] },
 
+  OPEN_WATER_ALL: { label: 'Acque Libere aperto a tutti', requiresSubscription: true, allowedLevels: ['ALL'] },
   OPEN_WATER_OPEN: { label: 'Acque Libere Open', requiresSubscription: true, allowedLevels: ['OPEN'] },
   OPEN_WATER_ADVANCE: { label: 'Acque Libere Advance', requiresSubscription: true, allowedLevels: ['ADVANCED'] },
   OPEN_WATER_DEPTH: { label: 'Acque Libere Depth', requiresSubscription: true, allowedLevels: ['DEPTH'] },
