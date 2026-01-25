@@ -442,7 +442,7 @@ const GestioneUser = () => {
         const users = await getAllUsers();
         setData((prev) => ({ ...prev, users }));
         setIsEditing(false);
-        setShowPopUp(false);
+        alert("Utente aggiornato")
       } catch (err) {
         console.error(err);
         setShowPopUp({
