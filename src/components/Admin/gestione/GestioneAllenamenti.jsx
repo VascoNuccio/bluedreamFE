@@ -51,7 +51,6 @@ const GestioneAllenamenti = () => {
           setShowPopup(true);
         } else{
           await createGroup({ name, level, description });
-          fetchAllenamenti();
           setName("");
           setDescription("");
           setMessage("Allenamento creato");
@@ -96,8 +95,8 @@ const GestioneAllenamenti = () => {
           <ConfirmPopup
             message={message}
             isError={isError}
-            onConfirm={() => setShowPopup(false)}
-            onCancel={() => setShowPopup(false)}
+            onConfirm={() => {setShowPopup(false); fetchAllenamenti();}}
+            onCancel={() => {setShowPopup(false); if(!isError)fetchAllenamenti();}}
           />
         )}
       </>
