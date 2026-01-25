@@ -43,30 +43,25 @@ const GestioneAllenamenti = () => {
 
     const handleCreate = async () => {
       try {
-        if (!name.trim()) {
+        if (!name?.trim()) {
           setMessage("Il nome dell'allenamento è obbligatorio");
           setShowPopup(true);
-        } 
-
-        if (!level.trim()) {
+        } else if (!level?.trim()) {
           setMessage("Il livello dell'allenamento è obbligatorio");
           setShowPopup(true);
-        } 
-
-        await createGroup({ name, level, description });
-        fetchAllenamenti();
-        setName("");
-        setLevel("");
-        setDescription("");
-        setMessage("Il livello dell'allenamento è obbligatorio");
-        setShowPopup(true);
-        setIsError(false);
+        } else{
+          await createGroup({ name, level, description });
+          setName("");
+          setDescription("");
+          setMessage("Allenamento creato");
+          setShowPopup(true);
+          setIsError(false);
+        }
       } catch(err) {
         setMessage(err.message || `Errore durante la creazione dell'allenamento`);
         setShowPopup(true);
         setIsError(true);
       }
-      if(callback) callback();
     };
 
     return (
