@@ -53,7 +53,7 @@ const GestioneAllenamenti = () => {
           setIsError(true);
         } else{
           await createGroup({ name, level, description });
-          await fetchAllenamenti();
+          fetchAllenamenti();
           setMessage("Allenamento creato");
           setIsError(false);
           setShowPopup(true);
@@ -119,7 +119,7 @@ const GestioneAllenamenti = () => {
     const handleDeleteConfirm = async () => {
       try {
         await deleteGroup(groupToDelete.id);
-        await fetchAllenamenti();
+        fetchAllenamenti();
         setIsConfirmPopUp(false);
       } catch (err) {
         if (err.type === "HAS_USERS") {
