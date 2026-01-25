@@ -47,7 +47,7 @@ export default function Login() {
         {error && <p className="error">{error}</p>}
         <section className='button-container'>
           <button type="button" id='accedi' onClick={handleOnClick}>Accedi</button>
-          <button type="button" id='registrati' onClick={handleOnClick}>Registrati</button>
+          {/* <button type="button" id='registrati' onClick={handleOnClick}>Registrati</button> */}
         </section>
       </form>
     </div>
