@@ -34,9 +34,9 @@ const GestioneAllenamenti = () => {
   }, []);
 
   const CreateGroup = () => {
-    const [name, setName] = useState("");
+    const [name, setName] = useState();
     const [level, setLevel] = useState(livelli.length > 0 ? livelli[0] : "");
-    const [description, setDescription] = useState("");
+    const [description, setDescription] = useState();
     const [showPopup, setShowPopup] = useState(false);
     const [isError, setIsError] = useState(false);
     const [message, setMessage] = useState("");
@@ -46,28 +46,32 @@ const GestioneAllenamenti = () => {
         if (!name.trim()) {
           setMessage("Il nome dell'allenamento è obbligatorio");
           setShowPopup(true);
-          setIsError(true);
-        } else if (!level.trim()) {
+        } 
+
+        if (!level.trim()) {
           setMessage("Il livello dell'allenamento è obbligatorio");
           setShowPopup(true);
-          setIsError(true);
-        } else{
-          await createGroup({ name, level, description });
-          fetchAllenamenti();
-          setMessage("Allenamento creato");
-          setIsError(false);
-          setShowPopup(true);
-        }
+        } 
+
+        await createGroup({ name, level, description });
+        fetchAllenamenti();
+        setName("");
+        setLevel("");
+        setDescription("");
+        setMessage("Il livello dell'allenamento è obbligatorio");
+        setShowPopup(true);
+        setIsError(false);
       } catch(err) {
         setMessage(err.message || `Errore durante la creazione dell'allenamento`);
         setShowPopup(true);
         setIsError(true);
       }
+      if(callback) callback();
     };
 
     return (
       <>
-        <form onSubmit={()=>{handleCreate()}}>
+        <form onSubmit={(e)=>{e.preventDefault(); handleCreate();}}>
           <label>Nome allenamento:</label>
           <input
             placeholder="Inserisci nome"
@@ -96,8 +100,8 @@ const GestioneAllenamenti = () => {
           <ConfirmPopup
             message={message}
             isError={isError}
-            onConfirm={() =>{setShowPopup(false), setIsError(false)}}
-            onCancel={() =>{setShowPopup(false), setIsError(false)}}
+            onConfirm={() => setShowPopup(false)}
+            onCancel={() => setShowPopup(false)}
           />
         )}
       </>
