@@ -336,6 +336,7 @@ const GestioneUser = () => {
         let updatedSubscriptions;
       
         const activeSub = subscriptions.find(sub => sub.status === 'ACTIVE');
+        console.log("subscription active find? ",activeSub)
       
         if (activeSub) {
           updatedSubscriptions = subscriptions.map(sub =>
@@ -351,7 +352,7 @@ const GestioneUser = () => {
           const newSub = {
             id: undefined,
             status: 'ACTIVE',
-            [name]: name === 'amount' ? Number(value) : new Date(value).toISOString(),
+            [name]: (name === 'amount' || name === 'ingressi') ? Number(value) : new Date(value).toISOString(),
           };
           if (name === 'startDate') {
             newSub.endDate = addMonths(new Date(value), SUBSCRIPTION_MONTHS).toISOString();
