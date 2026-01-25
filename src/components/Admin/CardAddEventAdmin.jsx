@@ -118,14 +118,11 @@ const CardAddEventAdmin = ({ addTurno, dateTurno }) => {
       }
     }
 
-    if(!newTurno.maxSlots || newTurno.maxSlots.trim() === "") {
-      let mess = messageObj.message? messageObj.message+", " : "";
-      messageObj = {error: true, message: mess+"Posti totali obbligatori"};
-    }
+    let maxSlotsNum = Number(newTurno.maxSlots);
 
-    if(newTurno.maxSlots && (isNaN(newTurno.maxSlots) || newTurno.maxSlots < 1)) {
-      let mess = messageObj.message? messageObj.message+", " : "";
-      messageObj = {error: true, message: mess+"Deve essere un numero maggiore di 0"};
+    if (!/^\d+$/.test(newTurno.maxSlots) ||  maxSlotsNum <= 0) {
+      let mess = messageObj.message ? messageObj.message + ", " : "";
+      messageObj = { error: true, message: mess + "Posti totali obbligatori e maggiori di 0" };
     }
 
     return messageObj;;
