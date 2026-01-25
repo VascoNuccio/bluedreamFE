@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext'
 import CalendarAdmin from '@/components/Admin/CalendarAdmin'
 import GestioneUser from '@/components/Admin/gestione/GestioneUser' 
-import GestioneAllenamenti from '@/components/Admin/gestione/GestioneAllenamenti'
+import GestioneCorsi from '@/components/Admin/gestione/GestioneCorsi'
 import CaricaQuadrimeste from '@/components/Admin/gestione/CaricaQuadrimestre'
 import styles from '@/assets/styles/dashboardAdmin.module.scss'
 import InfoLivelliCategories from '../components/Admin/gestione/InfoLivelliCategories';
@@ -10,7 +10,7 @@ import InfoLivelliCategories from '../components/Admin/gestione/InfoLivelliCateg
 const TAB_NAME = [
   { key: "CALENDAR", label: "Calendario", role: true },
   { key: "GESTIONE_USER", label: "Utenze", role: true  },
-  { key: "GESTIONE_ALLENAMENTI", label: "Allenamenti", role: true  },
+  { key: "GESTIONE_CORSI", label: "Corsi", role: true  },
   { key: "INFO_LIVELLI_CATEGORIE", label: "Info Livelli Categorie", role: true  },
   { key: "GESTIONE_QUADRIMESTRE", label: "Carica Quadrimeste", role: false  }
 ];
@@ -54,7 +54,7 @@ const DashboardAdmin = ({isSuperadmin}) => {
       <Tab nameOfSelected={tabSelected} callback={setTabSelected} isSuperadmin={isSuperadmin}/>
       {tabSelected === "CALENDAR" && <CalendarAdmin />}
       {tabSelected === "GESTIONE_USER" && <GestioneUser />}
-      {tabSelected === "GESTIONE_ALLENAMENTI" && <GestioneAllenamenti />}
+      {tabSelected === "GESTIONE_CORSI" && <GestioneCorsi />}
       {tabSelected === "GESTIONE_QUADRIMESTRE" && <CaricaQuadrimeste />}
       {tabSelected === "INFO_LIVELLI_CATEGORIE" && <InfoLivelliCategories />}
     </div>

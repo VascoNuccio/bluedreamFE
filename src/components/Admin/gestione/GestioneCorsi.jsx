@@ -5,7 +5,7 @@ import ConfirmPopup from "@/components/ConfirmPopUp";
 import DropdownList from "@/components/DropdownList";
 import styles from '@/assets/styles/gestioneAllenamenti.module.scss'
 
-const GestioneAllenamenti = () => {
+const GestioneCorsi = () => {
   const {
     createGroup,
     getAllGroups,
@@ -53,7 +53,7 @@ const GestioneAllenamenti = () => {
           await createGroup({ name, level, description });
           setName("");
           setDescription("");
-          setMessage("Allenamento creato");
+          setMessage("Corso creato");
           setShowPopup(true);
           setIsError(false);
         }
@@ -313,19 +313,19 @@ const GestioneAllenamenti = () => {
 
   return (
     <div className={styles.container}>
-      <Collapse title="Crea Allenamento">
+      <Collapse title="Crea Corso">
         <CreateGroup />
       </Collapse>
 
-      <Collapse title="Cancella Allenamento">
+      <Collapse title="Cancella Corso">
         <DeleteGroup />
       </Collapse>
 
-      <Collapse title="Modifica Allenamento">
+      <Collapse title="Modifica Corso">
         <UpdateGroup />
       </Collapse>
     </div>
   );
 };
 
-export default GestioneAllenamenti;
+export default GestioneCorsi;
