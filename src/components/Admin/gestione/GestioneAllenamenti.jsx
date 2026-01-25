@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Collapse from "@/components/Collapse";
-import ConfirmPopup from "@/components/ConfirmPopup";
+import ConfirmPopup from "@/components/ConfirmPopUp";
 import DropdownList from "@/components/DropdownList";
 import styles from '@/assets/styles/gestioneAllenamenti.module.scss'
 
