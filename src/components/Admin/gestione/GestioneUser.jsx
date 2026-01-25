@@ -172,11 +172,11 @@ const GestioneUser = () => {
       
       <label>Ingressi:</label>
       <input type="text" placeholder='ingressi' name="ingressi" value={newUser.ingressi} onChange={handeChangeUser}/>
-      <label>Groups:</label>
+      <label>Corsi:</label>
       <DropdownList
         isEditing={true} 
         isVisible={false} 
-        placeholder={"Select groups"} 
+        placeholder={"Seleziona Corsi"} 
         fields={data.groups ? data.groups.map(group => group.name) : []}
         text={groupNames.join(", ")} 
         onChange={(value) => handleChangeGroup(value)}
@@ -551,11 +551,11 @@ const GestioneUser = () => {
                 onChange={handleChangeSubscription}
               />
 
-              <label>Groups:</label>
+              <label>Corsi:</label>
               <DropdownList
                 isEditing={true}
                 isVisible={false}
-                placeholder="Select groups"
+                placeholder="Seleziona corsi"
                 fields={data.groups?.map((g) => g.name) || []}
                 text={groupNames.join(', ')}
                 onChange={handleChangeGroup}
