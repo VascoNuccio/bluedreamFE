@@ -81,7 +81,13 @@ export default function useAuthFetch({ setUser }) {
     const contentType = res.headers.get("Content-Type");
     if (contentType?.includes("application/json")) {
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || data.message || "Errore API");
+      if (!res.ok) {
+        const error = new Error(data?.message || "Errore API");
+        error.data = data;
+        error.status = res.status;
+        throw error;
+      }
+
       return data;
     } else {
       // se non JSON, ritorna il blob
