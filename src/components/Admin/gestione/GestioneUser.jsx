@@ -177,7 +177,7 @@ const GestioneUser = () => {
         isEditing={true} 
         isVisible={false} 
         placeholder={"Seleziona Corsi"} 
-        fields={data.groups ? data.groups.map(group => group.name) : []}
+        fields={data?.groups? data?.groups.map(group => group.name) : []}
         text={groupNames.join(", ")} 
         onChange={(value) => handleChangeGroup(value)}
         onCancel={(value) => handleCancelGroup(value)}
