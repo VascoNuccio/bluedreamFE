@@ -51,6 +51,7 @@ const GestioneAllenamenti = () => {
           setShowPopup(true);
         } else{
           await createGroup({ name, level, description });
+          fetchAllenamenti();
           setName("");
           setDescription("");
           setMessage("Allenamento creato");
