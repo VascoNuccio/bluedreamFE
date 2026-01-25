@@ -269,6 +269,7 @@ const GestioneUser = () => {
         status: selectedUser.status ?? 'SUBSCRIBED',
       
         // Subscription
+        id: activeSub.id? activeSub.id: undefined,
         startDate: activeSub.startDate ? activeSub.startDate.split('T')[0] : undefined,
         endDate: activeSub.endDate ? activeSub.endDate.split('T')[0] : undefined,
         amount: activeSub.amount !== undefined ? Number(activeSub.amount) : undefined,
