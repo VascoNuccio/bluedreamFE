@@ -342,11 +342,7 @@ const GestioneUser = () => {
             sub.status === 'ACTIVE'
               ? {
                   ...sub,
-                  [name]: name === 'amount' ? Number(value) : new Date(value).toISOString(),
-                  // se startDate viene modificata, puoi calcolare automaticamente endDate
-                  ...(name === 'startDate' ? {
-                    endDate: addMonths(new Date(value), SUBSCRIPTION_MONTHS).toISOString()
-                  } : {})
+                  [name]: (name === 'amount' || name === 'ingressi') ? Number(value) : new Date(value).toISOString()
                 }
               : sub
           );
