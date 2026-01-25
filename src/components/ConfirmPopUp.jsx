@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '@/assets/styles/confirmPopup.module.scss';
+import styles from '@/assets/styles/confirmPopUp.module.scss';
 
 // CONFIRM POPUP
 const ConfirmPopup = ({ message, onConfirm, onCancel, isError = false}) => {
