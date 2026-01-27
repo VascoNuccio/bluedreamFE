@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext'
 import CalendarAdmin from '@/components/Admin/CalendarAdmin'
-import GestioneUser from '@/components/Admin/gestione/GestioneUser' 
+import GestioneUser from '@/components/Admin/gestione/gestioneUser/GestioneUser' 
 import GestioneCorsi from '@/components/Admin/gestione/GestioneCorsi'
 import CaricaQuadrimeste from '@/components/Admin/gestione/CaricaQuadrimestre'
 import styles from '@/assets/styles/dashboardAdmin.module.scss'

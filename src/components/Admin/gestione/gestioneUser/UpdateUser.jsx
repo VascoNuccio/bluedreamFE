@@ -1,259 +1,13 @@
-import React, { use, useEffect } from 'react'
+import React, { useEffect } from "react";
 import styles from '@/assets/styles/gestioneUser.module.scss'
-import { useAuth } from '@/context/AuthContext';
 import DropdownList from "@/components/DropdownList";
-import Collapse from '@/components/Collapse';
 import OpenEye from "@/assets/icons/eye-solid-full.svg";
 import CloseEye from "@/assets/icons/eye-slash-solid-full.svg";
 import ConfirmPopUp from '@/components/ConfirmPopUp';
 
-const GestioneUser = () => {
-  const { user, createUser, updateUser, getAllUsers, disableUser, deleteUser, getUserStatuses, getAllGroups } = useAuth();
+  const UpdateUser = ({user, deleteUser, data, updateUser, callback}) => {
+    const SUBSCRIPTION_MONTHS = parseInt(import.meta.env.VITE_SUBSCRIPTION_MONTHS);
 
-  const [data, setData] = React.useState(null);
-
-  const ROLE_USER = import.meta.env.VITE_ROLE_USER;
-  const ROLE_ADMIN = import.meta.env.VITE_ROLE_ADMIN;
-  const SUBSCRIPTION_MONTHS = parseInt(import.meta.env.VITE_SUBSCRIPTION_MONTHS);
-  const STATUS_SUBSCRIBED = import.meta.env.VITE_STATUS_SUBSCRIBED;
-  
-  useEffect(() => {
-    getAllGroups().then(groups => {
-      setData(prevData => ({...prevData, groups: groups}));
-    }).catch(err => {
-      console.error("Error fetching groups:", err);
-    });
-    getAllUsers().then(users => {
-      setData(prevData => ({...prevData, users: users}));
-    }).catch(err => {
-      console.error("Error fetching users:", err);
-    });
-    getUserStatuses().then(statuses => {
-      setData(prevData => ({...prevData, statuses: statuses.userStatuses}));
-    }).catch(err => {
-      console.error("Error fetching user statuses:", err);
-    });
-  }, []);
-
-  const CreateUserForm = () => {
-
-    const [showPassword, setShowPassword] = React.useState(false);
-    const [showPopUp, setShowPopUp] = React.useState(false);
-
-    const formatDateForInput = (date) => {
-      return date.toISOString().split('T')[0];
-    };
-
-    const addMonths = (date, months) => {
-      const newDate = new Date(date);
-      newDate.setMonth(newDate.getMonth() + months);
-      return newDate;
-    };
-    
-    const today = new Date();
-
-    const [newUser, setNewUser] = React.useState({
-      "email": "",
-      "password": "",
-      "firstName": "",
-      "lastName": "",
-      "role": ROLE_USER,
-      "startDate": formatDateForInput(today),
-      "endDate": formatDateForInput(addMonths(today, SUBSCRIPTION_MONTHS)),
-      "amount": "",
-      "ingressi": "32",
-      "groups": []
-    });
-
-    const [groupNames, setGroupNames] = React.useState([]);
-
-    const handeChangeUser = (e) => {
-      setNewUser({
-        ...newUser,
-        [e.target.name]: e.target.value
-      })
-    }
-
-    const handleChange = (field, value) => {
-      setNewUser({
-        ...newUser,
-        [field]: value
-      });
-    }
-
-    const handleChangeGroup = (name) => {
-      setGroupNames(prev => {
-        if (prev.includes(name)) return prev; // già presente
-        return [...prev, name];
-      });
-    
-      const group = data.groups.find(g => g.name === name);
-      if (!group) return;
-    
-      setNewUser(prev => {
-        if (prev.groups.includes(group.id)) return prev; // già presente
-        return {
-          ...prev,
-          groups: [...prev.groups, group.id]
-        };
-      });
-    };
-
-    const handleCancelGroup = (name) => {
-      // Rimuove il nome dall’elenco
-      setGroupNames(prev => prev.filter(n => n !== name));
-    
-      const group = data.groups.find(g => g.name === name);
-      if (!group) return;
-    
-      // Rimuove l'id del gruppo
-      setNewUser(prev => ({
-        ...prev,
-        groups: prev.groups.filter(id => id !== group.id)
-      }));
-    };
-
-    const handleCreateUser = () =>{
-      try {
-        createUser(newUser)
-        setShowPopUp({message: "Creato utente", isError: false});
-      } catch (error) {
-        setShowPopUp({message: err.error || "errore creazione user", isError: true});
-      }
-    }
-
-    const onClose = () => {
-      showPopUp(false);
-    }
-
-    return <form onSubmit={handleCreateUser}>
-      <label>Email:</label>
-      <input type="email" placeholder="email" autoComplete="new-email" name='email' value={newUser.email} onChange={handeChangeUser}/>
-      <label>Password:</label>
-      <div style={{ position: "relative", width: "100%" }}>
-        <input
-          type={showPassword ? "text" : "password"}
-          name="password"
-          placeholder="password"
-          value={newUser.password}
-          autoComplete="new-password"
-          onChange={handeChangeUser}
-          style={{
-            width: "100%",
-            paddingRight: "40px", // spazio per il pulsante
-            boxSizing: "border-box"
-          }}
-        />
-        <button
-          type="button"
-          onClick={() => setShowPassword(prev => !prev)}
-          style={{
-            position: "absolute",
-            right: "8px",
-            top: "50%",
-            transform: "translateY(-50%)",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            padding: 0,
-            fontSize: "1rem"
-          }}
-        >
-          <img src={showPassword ? CloseEye : OpenEye} alt="Toggle Password" />
-        </button>
-      </div>
-      <label>First Name:</label>
-      <input type="text" placeholder="first name" name='firstName' value={newUser.firstName} onChange={handeChangeUser}/>
-      <label>Last Name:</label>
-      <input type="text" placeholder="last name" name='lastName' value={newUser.lastName} onChange={handeChangeUser}/>
-      <label>Role:</label>
-      <DropdownList
-        isEditing={true} 
-        isVisible={false} 
-        placeholder={"role"} 
-        fields={[ROLE_USER,ROLE_ADMIN]}
-        text={newUser.role} 
-        onChange={(value) => handleChange("role", value)}
-      />
-      <h4 style={{paddingTop: "1rem"}}>Subscription Details</h4>
-      <hr/>
-      <label>Amount:</label>
-      <input type="text" placeholder="amount" name='amount' value={newUser.amount} onChange={handeChangeUser}/>
-      <label>Start Date:</label>
-      <input type="date" placeholder='yyyy-mm-dd' name='startDate' value={newUser.startDate} onChange={handeChangeUser}/>
-      <label>End Date:</label>
-      <input type="date" placeholder='yyyy-mm-dd' name='endDate' value={newUser.endDate} onChange={handeChangeUser}/>
-      
-      <label>Ingressi:</label>
-      <input type="text" placeholder='ingressi' name="ingressi" value={newUser.ingressi} onChange={handeChangeUser}/>
-      <label>Corsi:</label>
-      <DropdownList
-        isEditing={true} 
-        isVisible={false} 
-        placeholder={"Seleziona Corsi"} 
-        fields={data?.groups? data?.groups.map(group => group.name) : []}
-        text={groupNames.join(", ")} 
-        onChange={(value) => handleChangeGroup(value)}
-        onCancel={(value) => handleCancelGroup(value)}
-      />
-      <div className="submitButtonForm">
-          <button type='submit'>Save</button>
-      </div>
-      {showPopUp && <ConfirmPopUp message={showPopUp.message} onConfirm={onClose} onCancel={onClose} isError={showPopUp.isError}/>}
-    </form>
-  }
-
-  const DeleteUser = () => {
-    const [showPopUp, setShowPopUp] = React.useState(false);
-    const [message, setMessage] = React.useState("");
-    const [isError, setIsError] = React.useState(false);
-    const [userIdToDelete, setUserIdToDelete] = React.useState(null);
-
-    const handleDelete = (userId, name) => {
-
-      if(user.id === userId){
-        setMessage("You cannot delete your own account!");
-        setIsError(true);
-        setShowPopUp(true);
-        return;
-      }
-
-      setMessage("Deleting "+name+ ". Are you sure?");
-      setUserIdToDelete(userId);
-      setIsError(false);
-      setShowPopUp(true);
-    } 
-
-    const onConfirm = () => {
-      disableUser(userIdToDelete);
-      getAllUsers().then(users => {
-        setData(prevData => ({...prevData, users: users}));
-      }).catch(err => {
-        console.error("Error fetching users:", err);
-      });
-      setShowPopUp(false);
-    } 
-
-    const onCancel = () => {
-      setShowPopUp(false);
-    }
-
-    return<>
-    <div className={styles.delete_user_container}>
-      {data?.users?.map((user) => user.status === STATUS_SUBSCRIBED && (
-        <div key={user.id} className={styles.delete_user_card} onClick={() => handleDelete(user.id, user.firstName+" "+user.lastName)}>
-          <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Name:</strong> {user.firstName} {user.lastName}</p>
-          <p><strong>Role:</strong> {user.role}</p>
-          <p><strong>Status:</strong> {user.status}</p>
-        </div>
-      ))}
-    </div>
-    {showPopUp && <ConfirmPopUp message={message} onConfirm={onConfirm} onCancel={onCancel} isError={isError}/>}
-    </> 
-  }
-
-  const UpdateUser = () => {
     const [filteredUsers, setFilteredUsers] = React.useState(data?.users || []);
     const [isEditing, setIsEditing] = React.useState(false);
     const [selectedUser, setSelectedUser] = React.useState(null);
@@ -261,6 +15,10 @@ const GestioneUser = () => {
     const [groupNames, setGroupNames] = React.useState([]);
     const [showPassword, setShowPassword] = React.useState(false);
     const [showPopUp, setShowPopUp] = React.useState(false);
+
+    React.useEffect(() => {
+      setFilteredUsers(data?.users || []);
+    }, [data]);
 
     const addMonths = (date, months) => {
       const newDate = new Date(date);
@@ -344,6 +102,10 @@ const GestioneUser = () => {
       setSelectedUser((prev) => ({ ...prev, [name]: value }));
     };
 
+    const handleChangeStatus = (name, value) => {
+      setSelectedUser((prev) => ({ ...prev, [name]: value }));
+    };
+
     const handleChangeSubscription = (e) => {
       const { name, value } = e.target;
     
@@ -417,14 +179,19 @@ const GestioneUser = () => {
       
         await updateUser(selectedUser.id, payload);
       
-        const users = await getAllUsers();
-        setData(prev => ({ ...prev, users }));
+        callback();
         setIsEditing(false);
+        setShowPopUp({
+          message: "Utente aggiornato correttamente",
+          isError: false,
+          isClose: true
+        });
       } catch (err) {
         console.error(err)
         setShowPopUp({
           message: err.message || err,
           isError: true,
+          isClose: true
         });
       }
     };
@@ -433,23 +200,37 @@ const GestioneUser = () => {
       setShowPopUp({
         message: `Sei sicuro di voler cancellare definitivamente ${selectedUser?.email ?? 'user'}?`,
         isError: false,
+        isClose: false
       });
     };
 
-    const onConfirm = async () => {
-      try {
-        await deleteUser(selectedUser.id);
-        const users = await getAllUsers();
-        setData((prev) => ({ ...prev, users }));
-        setIsEditing(false);
-        alert("Utente aggiornato")
-      } catch (err) {
-        console.error(err);
-        setShowPopUp({
-          message: `Errore durante la cancellazione di ${selectedUser?.email ?? 'user'}.`,
-          isError: true,
-        });
-      }
+    const onCancelConfirm = async () => {
+
+        if(user.id === selectedUser.id){
+          setShowPopUp({
+              message: "You cannot delete your own account!",
+              isError: false,
+              isClose: true
+          });
+        }else{
+            try {
+                await deleteUser(selectedUser.id);
+                callback();
+                setIsEditing(false);
+                setShowPopUp({
+                  message: "Utente eliminato correttamente",
+                  isError: false,
+                  isClose: true
+                });
+            }catch (err) {
+                console.error(err);
+                setShowPopUp({
+                  message: `Errore durante la cancellazione di ${selectedUser?.email ?? 'user'}.`,
+                  isError: true,
+                  isClose: false
+                });
+            }
+        }
     };
 
     const onCancel = () => setShowPopUp(false);
@@ -533,6 +314,16 @@ const GestioneUser = () => {
               <label>Last Name:</label>
               <input type="text" name="lastName" value={selectedUser.lastName} onChange={handleChangeUser} />
 
+              <label>Status:</label>
+              <DropdownList
+                isEditing={true}
+                isVisible={false}
+                placeholder="Seleziona status"
+                fields={['SUBSCRIBED','CANCELLED']}
+                text={selectedUser.status}
+                onChange={(value) => handleChangeStatus("status",value)}
+              />
+
               <h4>Subscription Details</h4>
               <hr />
               <label>Amount:</label>
@@ -596,19 +387,10 @@ const GestioneUser = () => {
         )}
 
         {showPopUp && (
-          <ConfirmPopUp message={showPopUp.message} onConfirm={onConfirm} onCancel={onCancel} isError={showPopUp.isError} />
+          <ConfirmPopUp message={showPopUp.message} onConfirm={showPopUp?.isClose?onCancel:onCancelConfirm} onCancel={onCancel} isError={showPopUp.isError} />
         )}
       </>
     );
   };
 
-  return (
-    <div className={styles.container}>
-      <Collapse title="Create User" ><CreateUserForm /></Collapse>
-      <Collapse title="Delete User" ><DeleteUser/></Collapse>
-      <Collapse title="Update User" ><UpdateUser/></Collapse>
-    </div>
-  )
-}
-
-export default GestioneUser
+export default UpdateUser;
