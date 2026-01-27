@@ -6,7 +6,7 @@ const LEVEL_COLORS = {
   ALL: '#9e9e9e',
   OPEN: '#4caf50',
   ADVANCED: '#2196f3',
-  DEPTH: '#f44336'
+  DEEP: '#f44336'
 };
 
 const SUBSCRIPTION_COLORS = {
@@ -18,7 +18,7 @@ const EVENT_COLORS = {
   DESCRIPTION: '#32ACDC'
 };
 
-const LEVEL_ORDER = ['ALL', 'OPEN', 'ADVANCED', 'DEPTH'];
+const LEVEL_ORDER = ['ALL', 'OPEN', 'ADVANCED', 'DEEP'];
 
 // Regole eventi
 const eventRules = {
@@ -26,28 +26,28 @@ const eventRules = {
 
   COURSE_OPEN: { label: 'Corso Open', requiresSubscription: true, allowedLevels: ['OPEN'] },
   COURSE_ADVANCED: { label: 'Corso Advanced', requiresSubscription: true, allowedLevels: ['ADVANCED'] },
-  COURSE_DEPTH: { label: 'Corso Depth', requiresSubscription: true, allowedLevels: ['DEPTH'] },
+  COURSE_DEEP: { label: 'Corso Deep', requiresSubscription: true, allowedLevels: ['DEEP'] },
 
   TRAINING_ALL: { label: 'Allenamento aperto a tutti', requiresSubscription: true, allowedLevels: ['ALL'] },
   TRAINING_OPEN: { label: 'Allenamento Open', requiresSubscription: true, allowedLevels: ['OPEN'] },
   TRAINING_ADVANCED: { label: 'Allenamento Advanced', requiresSubscription: true, allowedLevels: ['ADVANCED'] },
-  TRAINING_DEPTH: { label: 'Allenamento Depth', requiresSubscription: true, allowedLevels: ['DEPTH'] },
+  TRAINING_DEEP: { label: 'Allenamento Deep', requiresSubscription: true, allowedLevels: ['DEEP'] },
 
   OPEN_WATER_ALL: { label: 'Acque Libere aperto a tutti', requiresSubscription: true, allowedLevels: ['ALL'] },
   OPEN_WATER_OPEN: { label: 'Acque Libere Open', requiresSubscription: true, allowedLevels: ['OPEN'] },
   OPEN_WATER_ADVANCE: { label: 'Acque Libere Advance', requiresSubscription: true, allowedLevels: ['ADVANCED'] },
-  OPEN_WATER_DEPTH: { label: 'Acque Libere Depth', requiresSubscription: true, allowedLevels: ['DEPTH'] },
+  OPEN_WATER_DEEP: { label: 'Acque Libere Deep', requiresSubscription: true, allowedLevels: ['DEEP'] },
 
   Y40_ALL: { label: 'Uscita Y-40 aperto a tutti', requiresSubscription: true, allowedLevels: ['ALL'] },
   Y40_OPEN: { label: 'Uscita Y-40 Open', requiresSubscription: true, allowedLevels: ['OPEN'] },
   Y40_ADVANCED: { label: 'Uscita Y-40 Advanced', requiresSubscription: true, allowedLevels: ['ADVANCED'] },
-  Y40_DEPTH: { label: 'Uscita Y-40 Depth', requiresSubscription: true, allowedLevels: ['DEPTH'] },
+  Y40_DEEP: { label: 'Uscita Y-40 Deep', requiresSubscription: true, allowedLevels: ['DEEP'] },
 
   EVENT_SPECIAL_FREE: { label: 'Evento Speciale Gratuito', requiresSubscription: false, allowedLevels: ['ALL'] },
   EVENT_SPECIAL: { label: 'Evento Speciale', requiresSubscription: true, allowedLevels: ['ALL'] },
   EVENT_SPECIAL_OPEN: { label: 'Evento Speciale Open', requiresSubscription: true, allowedLevels: ['OPEN'] },
   EVENT_SPECIAL_ADVANCED: { label: 'Evento Speciale Advanced', requiresSubscription: true, allowedLevels: ['ADVANCED'] },
-  EVENT_SPECIAL_DEPTH: { label: 'Evento Speciale Depth', requiresSubscription: true, allowedLevels: ['DEPTH'] }
+  EVENT_SPECIAL_DEEP: { label: 'Evento Speciale Deep', requiresSubscription: true, allowedLevels: ['DEEP'] }
 };
 
 const InfoLivelliCategories = () => {
