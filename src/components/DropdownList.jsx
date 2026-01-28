@@ -13,7 +13,7 @@ const getDisplayValue = (value, key, fallback = '-') => {
   return value ?? fallback;
 };
 
-const Dropdown = ({placeholder, fields, text, valueKey="label", onChange, onCancel}) => {
+const Dropdown = ({placeholder, fields, text, valueKey="label", onChange, onCancel, isDisabled = false}) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const containerRef = useRef(null);
@@ -52,6 +52,7 @@ const Dropdown = ({placeholder, fields, text, valueKey="label", onChange, onCanc
       {/* INPUT */}
         <div className={styles.addContainer}>
           <button
+            disabled={isDisabled}
             type="button"
             className={styles.fakeInput}
             onClick={() => {

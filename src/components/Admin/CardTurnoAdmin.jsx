@@ -3,14 +3,34 @@ import styles from "@/assets/styles/cardTurnoAdmin.module.scss";
 import IconEdit from "@/assets/modifica.svg";
 import ConfirmPopup from "@/components/ConfirmPopUp";
 import PartecipantiDropdownMenu from "@/components/PartecipantiDropdownMenu";
+import { useAuth } from "@/context/AuthContext";
+import DropdownList from "@/components/DropdownList"
 
 // MAIN COMPONENT
 const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, removeTurnoHard }) => {
+    const { getAllAdminEventCategory } = useAuth();
 
   const [editData, setEditData] = useState({ ...turno });
   const [editingField, setEditingField] = useState(null);
   const [confirmData, setConfirmData] = useState(null);
   const isDisabled = turno.status !== 'SCHEDULED'
+
+  const [categoryDropdown, setCategoryDropdown] = useState([]);
+    const [categorySelected, setCategorySelected] = useState();
+  
+    useEffect(() => {
+     
+      getAllAdminEventCategory().then((categories) => {
+        setCategoryDropdown(categories);
+  
+        const selected = categories.find(
+          c => c.id === editData.categoryId
+        );
+        setCategorySelected(selected || null);
+      }).catch((err) => {
+        console.error("Errore nel caricamento degli allenamenti per il dropdown", err);
+      });
+  }, [getAllAdminEventCategory, editData]);
 
   const startFieldEdit = (field) => {
     setEditingField(field);
@@ -108,6 +128,7 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
   };
 
   const handleConfirm = () => {
+    console.log(confirmData);
     if (!confirmData) return;
 
     if (confirmData.action === "save"){
@@ -206,7 +227,7 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
         <input
           disabled={editingField !== "location" || isDisabled}
           value={editData.location}
-          onChange={(e) => handleChange("location", e.target.value)}
+          onChange={() => handleChange("location", e.target.value)}
           placeholder="Luogo"
         />
         {editingField === "location" && !isDisabled ? (
@@ -299,6 +320,27 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
         placeholder="Partecipanti"
         onChange={(updated) => handleChange("partecipanti", updated)}
       />
+
+      {/* CATEGORY */}
+      <div className={styles.fieldRow}>
+        <DropdownList
+          isDisabled={editingField !== "categoryId" || isDisabled} 
+          placeholder={"Categoria evento"} 
+          fields={categoryDropdown}
+          text={categorySelected ? categorySelected.code : ""}
+          valueKey="code"
+          onChange={(value) => handleChange("categoryId", value.id)}
+          onCancel={()=>setEditData((prev) => ({ ...prev, ["categoryId"]: categorySelected.id }))}
+        />
+        {editingField === "categoryId" && !isDisabled ? (
+          <div className={styles.buttonGroup}>
+            <button className={styles.saveBtn} onClick={() => requestConfirm("save", "categoryId")}>✔</button>
+            <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
+          </div>
+        ) : (
+          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("categoryId")} />
+        )}
+      </div>
 
       {/* RIMUOVI - RIPRISTINA */}
       <div className={styles.actions}>
