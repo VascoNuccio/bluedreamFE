@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import bluedream from '@/assets/bluedream_orizzontal.jpeg'
 
 const ROLE_USER = import.meta.env.VITE_ROLE_USER;
 const ROLE_ADMIN = import.meta.env.VITE_ROLE_ADMIN;
@@ -41,7 +42,8 @@ export default function Login() {
   return (
     <div className="container">
       <form className="login-card">
-        <h1><span className='color-bg'>BLUE</span>DREAM</h1>
+        {/* <h1><span className='color-bg'>BLUE</span>DREAM</h1> */}
+        <img src={bluedream} alt="BlueDream logo" style={{width: '-webkit-fill-available'}} />
         <input type="email" placeholder="Email" value={email} onChange={(e)=>setEmail(e.target.value)} />
         <input type="password" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} />
         {error && <p className="error">{error}</p>}

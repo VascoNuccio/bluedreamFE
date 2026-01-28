@@ -1,6 +1,7 @@
 import React from 'react'
 import { useAuth } from '@/context/AuthContext'
 import styles from '@/assets/styles/navbar.module.scss'
+import bluedream from '@/assets/bluedream_orizzontal.jpeg'
 
 const Navbar = () => {
   const { user, handleLogout } = useAuth()
@@ -8,7 +9,8 @@ const Navbar = () => {
 
   return (
     <nav className={styles.navbar}>
-        <h2 className={styles.title}><span className={styles.color_bg}>BLUE</span>DREAM</h2>
+        {/* <h2 className={styles.title}><span className={styles.color_bg}>BLUE</span>DREAM</h2> */}
+        <img src={bluedream} alt="BlueDream logo" className={styles.logo} />
         <div className={styles.user_icon}>
         <div className={styles.logoutWrapper}>
           <button className={styles.user_button} onClick={handleLogout}>
