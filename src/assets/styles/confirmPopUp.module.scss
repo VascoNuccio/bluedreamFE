@@ -32,7 +32,7 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 
   p {
-    color: white;
+    color: $color-text;
     font-size: 1rem;
     text-align: center;
     margin: 0;
@@ -67,7 +67,7 @@
     &.saveBtn {
       background: $color-success;
       border: none;
-      color: white;
+      color: $color-text;
       cursor: pointer;
 
       &:hover {
@@ -78,7 +78,7 @@
     &.cancelBtn {
       background: $color-error;
       border: none;
-      color: white;
+      color: $color-text;
       cursor: pointer;
 
       &:hover {

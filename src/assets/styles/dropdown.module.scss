@@ -29,7 +29,7 @@
     border: none;
     outline: none;
     background: $color-bg;
-    color: white;
+    color: $color-text;
     width: 100%;
 
     &::placeholder {
@@ -44,7 +44,7 @@
     border: none;
     outline: none;
     background: $color-bg;
-    color: white;
+    color: $color-text;
     width: 100%;
     
     &::placeholder {
@@ -68,7 +68,7 @@
     border-radius: 6px;
     border: 1px solid #444;
     background: $color-bg;
-    color: white;
+    color: $color-text;
 
     &::placeholder {
       color: #999;
@@ -103,7 +103,7 @@
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    color: white;
+    color: $color-text;
     font-weight: bold;
     width: 1rem;
     padding: 0;
@@ -118,7 +118,7 @@
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    color: white;
+    color: $color-text;
     font-weight: bold;
     width: 1rem;
     padding: 0;
@@ -138,7 +138,7 @@
   border-radius: 6px;
   border: 1px solid #444;
   background: $color-bg;
-  color: white;
+  color: $color-text;
   text-align: left;
   cursor: pointer;
   opacity: 0.85;
@@ -180,7 +180,7 @@
   align-items: center;
   justify-content: flex-start;
   padding: 0.5rem;
-  color: white;
+  color: $color-text;
   font-size: 0.95rem;
   transition: background 0.2s;
   gap: 1rem;

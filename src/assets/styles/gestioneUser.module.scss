@@ -15,7 +15,7 @@
     padding: 1rem 0;
     .delete_user_card {
       border-radius: 1rem;
-      border: 2px solid white;
+      border: 2px solid $color-text;
       padding: 1rem;
       background-color: $color-bg;
       &:hover {
@@ -47,7 +47,7 @@
 
       .update_user_card {
         border-radius: 1rem;
-        border: 2px solid white;
+        border: 2px solid $color-text;
         padding: 1rem;
         background-color: $color-bg;
         &:hover {
@@ -71,7 +71,7 @@
         border: none;
         padding: 8px 12px;
         border-radius: 6px;
-        color: white;
+        color: $color-text;
         cursor: pointer;
         font-weight: bold;
 
@@ -85,7 +85,7 @@
         border: none;
         padding: 8px 12px;
         border-radius: 6px;
-        color: white;
+        color: $color-text;
         cursor: pointer;
         font-weight: bold;
       
@@ -99,7 +99,7 @@
       border: none;
       padding: 8px 12px;
       border-radius: 6px;
-      color: white;
+      color: $color-text;
       cursor: pointer;
       font-weight: bold;
     

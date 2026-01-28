@@ -18,7 +18,7 @@
     color: $color-text;
     font-size: 2rem;
     font-weight: bold;
-    white-space: nowrap;      // evita che vada su due righe
+    $color-text-space: nowrap;      // evita che vada su due righe
   }
 
   .logo{
@@ -34,7 +34,7 @@
       color: $color-text;
       text-decoration: none;
       font-weight: 500;
-      white-space: nowrap;    // evita spaccature su mobile
+      $color-text-space: nowrap;    // evita spaccature su mobile
 
       &:hover {
         opacity: 0.8;
@@ -85,7 +85,7 @@
   font-size: 0.75rem;
   border-radius: 6px;
   border: 1px solid $color-text;
-  white-space: nowrap;
+  $color-text-space: nowrap;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease, transform 0.25s ease;

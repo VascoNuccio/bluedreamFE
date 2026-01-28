@@ -22,7 +22,7 @@
     border: none;
     outline: none;
     background: $color-bg;
-    color: white;
+    color: $color-text;
 
     &::placeholder {
       color: #999;
@@ -58,7 +58,7 @@
   // padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
-  color: white;
+  color: $color-text;
   font-weight: bold;
   width: 1rem;
 
@@ -72,7 +72,7 @@
   border: none;
   padding: 8px 12px;
   border-radius: 6px;
-  color: white;
+  color: $color-text;
   cursor: pointer;
   font-weight: bold;
 
@@ -87,7 +87,7 @@
   // padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
-  color: white;
+  color: $color-text;
   font-weight: bold;
   width: 1rem;
 
@@ -101,7 +101,7 @@
   border: none;
   padding: 8px 12px;
   border-radius: 6px;
-  color: white;
+  color: $color-text;
   cursor: pointer;
   font-weight: bold;
 

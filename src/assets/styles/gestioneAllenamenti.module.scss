@@ -15,7 +15,7 @@
     padding: 1rem 0;
     .delete_group_card {
       border-radius: 1rem;
-      border: 2px solid white;
+      border: 2px solid $color-text;
       padding: 1rem;
       background-color: $color-bg;
       &:hover {
@@ -47,7 +47,7 @@
 
       .update_group_card {
         border-radius: 1rem;
-        border: 2px solid white;
+        border: 2px solid $color-text;
         padding: 1rem;
         background-color: $color-bg;
         &:hover {

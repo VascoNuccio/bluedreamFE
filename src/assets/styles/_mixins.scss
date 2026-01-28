@@ -9,7 +9,7 @@
 
 @mixin button-style {
   background-color: v.$color-theme;
-  color: white;
+  color: v.$color-text;
   padding: 0.6rem 1.2rem;
   border: none;
   border-radius: v.$radius;

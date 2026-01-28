@@ -3,7 +3,7 @@
 
 .fullscreen {
   background: $color-bg;
-  color: white;
+  color: $color-text;
   padding: 20px;
   overflow-y: auto;
   z-index: 9999;
@@ -22,7 +22,7 @@
     border: none;
     padding: 8px 12px;
     border-radius: 6px;
-    color: white;
+    color: $color-text;
     cursor: pointer;
 
     &:hover {
@@ -58,7 +58,7 @@
     border-radius: 6px;
     background: $color-bg;
     border: 1px solid #444;
-    color: white;
+    color: $color-text;
 
     &::placeholder {
       color: $color-theme;
@@ -71,7 +71,7 @@
     padding: 8px;
     border-radius: 8px;
     border: none;
-    color: white;
+    color: $color-text;
     cursor: pointer;
 
     &:hover {

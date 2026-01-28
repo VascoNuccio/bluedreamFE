@@ -29,7 +29,7 @@
     border: none;
     outline: none;
     background: $color-bg;
-    color: white;
+    color: $color-text;
 
     &::placeholder {
       color: #999;
@@ -52,7 +52,7 @@
     border-radius: 6px;
     border: 1px solid #444;
     background: $color-bg;
-    color: white;
+    color: $color-text;
 
     &::placeholder {
       color: #999;
@@ -88,7 +88,7 @@
   // padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
-  color: white;
+  color: $color-text;
   font-weight: bold;
   width: 1rem;
 
@@ -103,7 +103,7 @@
   // padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
-  color: white;
+  color: $color-text;
   font-weight: bold;
   width: 1rem;
 
@@ -164,7 +164,7 @@
   align-items: center;
   justify-content: flex-start;
   padding: 0.5rem;
-  color: white;
+  color: $color-text;
   font-size: 0.95rem;
   transition: background 0.2s;
   gap: 1rem;
@@ -191,7 +191,7 @@
   background: $color-theme;
   border-radius: 8px;
   font-size: 0.95rem;
-  color: white;
+  color: $color-text;
 }
 
 .removeBtn {
