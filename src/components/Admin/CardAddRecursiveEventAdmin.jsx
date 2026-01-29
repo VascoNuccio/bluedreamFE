@@ -209,7 +209,7 @@ const CardAddRecursiveEventAdmin = ({ callback }) => {
       />
 
       <input
-        placeholder="Mesi di ripetizione"
+        placeholder="Numero mesi da popolare"
         value={newTurno.months}
         onChange={(e) => handleChange("months", e.target.value)}
       />
