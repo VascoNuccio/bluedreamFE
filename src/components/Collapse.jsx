@@ -3,10 +3,10 @@ import styles from '@/assets/styles/collapse.module.scss'
 import Up from "@/assets/icons/chevron-up-solid-full.svg";
 import Down from "@/assets/icons/chevron-down-solid-full.svg";
 
-const Collapse = ({title, children}) => {
+const Collapse = ({title, children, style}) => {
     const [isOpen, setOpen] = React.useState(false);
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={style}>
         <div className={styles.title} onClick={() => setOpen(!isOpen)}>
             <h3>{title}</h3>
             {isOpen?<img src={Up} alt="Toggle" />:<img src={Down} alt="Toggle" />}

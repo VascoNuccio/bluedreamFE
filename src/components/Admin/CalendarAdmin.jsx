@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import styles from '@/assets/styles/calendar.module.scss';
 import { useAuth } from '@/context/AuthContext';
 import GestoreTurniAdmin from "./GestoreTurniAdmin";
+import Collapse from "@/components/Collapse";
+import CardAddRecursiveEventAdmin from "@/components/Admin/CardAddRecursiveEventAdmin";
 
 const pad2 = (n) => String(n).padStart(2, '0');
 const makeDateKey = (y, m, d) => `${y}-${pad2(m)}-${pad2(d)}`;
@@ -210,6 +212,12 @@ const CalendarAdmin = () => {
           </div>
         </div>
       )}
+
+      <section className={styles.add_recursive_day}>
+        <Collapse title="Aggiungi eventi ricorsivi" style={{width: '100%'}}>
+          <CardAddRecursiveEventAdmin callback={()=>setRefresh(!refresh)}/>
+        </Collapse>
+      </section>
 
       {popupOpen && (
         <GestoreTurniAdmin

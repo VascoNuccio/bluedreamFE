@@ -173,6 +173,12 @@ export const AuthProvider = ({ children }) => {
       method: "POST",
       body: JSON.stringify(eventData),
     });
+  
+  const createRecursiveEvent = (recursiveEventData) =>
+    safeFetch(`/api/admin/events/recurring`, {
+      method: "POST",
+      body: JSON.stringify(recursiveEventData),
+    });
 
   const updateEvent = (eventId, eventData) =>
     safeFetch(`/api/admin/events/${eventId}`, {
@@ -311,6 +317,7 @@ export const AuthProvider = ({ children }) => {
         deleteUser,
         getUserStatuses,
         createEvent,
+        createRecursiveEvent,
         updateEvent,
         cancelEvent,
         cancelEventHard,
