@@ -213,12 +213,6 @@ const CalendarAdmin = () => {
         </div>
       )}
 
-      <section className={styles.add_recursive_day}>
-        <Collapse title="Aggiungi eventi ricorsivi" style={{width: '100%'}}>
-          <CardAddRecursiveEventAdmin callback={()=>setRefresh(!refresh)}/>
-        </Collapse>
-      </section>
-
       {popupOpen && (
         <GestoreTurniAdmin
           day={selectedDay}
@@ -231,6 +225,13 @@ const CalendarAdmin = () => {
           setTurniForDate={setTurniForDate}
         />
       )}
+
+      <section className={styles.add_recursive_day}>
+        <Collapse title="Aggiungi eventi ricorsivi" style={{width: '100%'}}>
+          <CardAddRecursiveEventAdmin callback={()=>setRefresh(!refresh)}/>
+        </Collapse>
+      </section>
+
     </>
   );
 };
