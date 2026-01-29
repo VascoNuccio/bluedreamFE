@@ -193,25 +193,31 @@ const CalendarAdmin = () => {
 
   return (
     <>
-      {!popupOpen && (
-        <div className={styles.calendarContainer}>
-          <div className={styles.calendarHeader}>
-            <button onClick={prevMonth}>←</button>
-            <h2>{monthName.charAt(0).toUpperCase() + monthName.slice(1)} {year}</h2>
-            <button onClick={nextMonth}>→</button>
-          </div>
+      {!popupOpen && <>
+          <div className={styles.calendarContainer}>
+            <div className={styles.calendarHeader}>
+              <button onClick={prevMonth}>←</button>
+              <h2>{monthName.charAt(0).toUpperCase() + monthName.slice(1)} {year}</h2>
+              <button onClick={nextMonth}>→</button>
+            </div>
 
-          <div className={styles.weekdays} style={{ gridTemplateColumns: "repeat(7, 1fr)" }}>
-            {["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"].map(label => (
-              <div key={label}>{label}</div>
-            ))}
-          </div>
+            <div className={styles.weekdays} style={{ gridTemplateColumns: "repeat(7, 1fr)" }}>
+              {["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"].map(label => (
+                <div key={label}>{label}</div>
+              ))}
+            </div>
 
-          <div className={styles.calendarGrid} style={{ gridTemplateColumns: "repeat(7, 1fr)" }}>
-            {cells}
+            <div className={styles.calendarGrid} style={{ gridTemplateColumns: "repeat(7, 1fr)" }}>
+              {cells}
+            </div>
           </div>
-        </div>
-      )}
+          <section className={styles.add_recursive_day}>
+            <Collapse title="Aggiungi eventi ricorsivi" style={{width: '100%'}}>
+              <CardAddRecursiveEventAdmin callback={()=>setRefresh(!refresh)}/>
+            </Collapse>
+          </section>
+        </>
+      }
 
       {popupOpen && (
         <GestoreTurniAdmin
@@ -225,12 +231,6 @@ const CalendarAdmin = () => {
           setTurniForDate={setTurniForDate}
         />
       )}
-
-      <section className={styles.add_recursive_day}>
-        <Collapse title="Aggiungi eventi ricorsivi" style={{width: '100%'}}>
-          <CardAddRecursiveEventAdmin callback={()=>setRefresh(!refresh)}/>
-        </Collapse>
-      </section>
 
     </>
   );
