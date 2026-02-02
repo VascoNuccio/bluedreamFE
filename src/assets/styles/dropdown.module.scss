@@ -172,7 +172,7 @@
   z-index: 20;
   max-height: 220px;
   overflow-y: auto;
-  width: fit-content;
+  min-width: 225px;
 }
 
 .dropdownRow {
