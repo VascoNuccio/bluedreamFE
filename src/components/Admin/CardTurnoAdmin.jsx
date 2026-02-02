@@ -111,8 +111,10 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
     let message = null;
     let messageObj = {error: false, message: ""};
 
-    if(action === "remove" || action === "removeHard"){
+    if(action === "remove"){
       message = "Confermi la rimozione?";
+    }else if(action === "removeHard"){
+      message = "Confermi l'eliminazione?";
     }else if(action === "ripristina"){
       message = "Confermi il ripristino?";
     }else if(action === "save"){
@@ -182,7 +184,9 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
           </div>
         ) : (
-          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("title")} />
+          <>
+            {!isDisabled && <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("title")} />}
+          </>
         )}
       </div>
 
@@ -200,7 +204,9 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
           </div>
         ) : (
-          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("description")} />
+          <>
+            {!isDisabled && <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("description")} />}
+          </>
         )}
       </div>
 
@@ -218,7 +224,9 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
           </div>
         ) : (
-          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("equipment")} />
+          <>
+            {!isDisabled && <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("equipment")} />}
+          </>
         )}
       </div>
 
@@ -236,7 +244,9 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
           </div>
         ) : (
-          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("location")} />
+          <>
+            {!isDisabled && <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("location")} />}
+          </>
         )}
       </div>
 
@@ -254,7 +264,9 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
           </div>
         ) : (
-          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("startTime")} />
+          <>
+            {!isDisabled && <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("startTime")} />}
+          </>
         )}
       </div>
 
@@ -272,7 +284,9 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
           </div>
         ) : (
-          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("endTime")} />
+          <>
+            {!isDisabled && <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("endTime")} />}
+          </>
         )}
       </div>
 
@@ -290,7 +304,9 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
           </div>
         ) : (
-          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("maxSlots")} />
+          <>
+            {!isDisabled && <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("maxSlots")} />}
+          </>
         )}
       </div>
 
@@ -308,23 +324,26 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
           </div>
         ) : (
-          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("note")} />
+          <>
+            {!isDisabled && <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("note")} />}
+          </>
         )}
       </div>
 
       {/* PARTECIPANTI  */}
       <PartecipantiDropdownMenu
-        isDisabled={!isDisabled}
+        isDisabled={isDisabled}
         key={turno.id}
         turno={turno}
         placeholder="Partecipanti"
         onChange={(updated) => handleChange("partecipanti", updated)}
+        onCancel={() => cancelField()}
       />
 
       {/* CATEGORY */}
       <div className={styles.fieldRow}>
         <DropdownList
-          isDisabled={editingField !== "categoryId" || isDisabled} 
+          isDisabled={editingField !== "categoryId" || isDisabled}
           placeholder={"Categoria evento"} 
           fields={categoryDropdown}
           text={categorySelected ? categorySelected.code : ""}
@@ -338,14 +357,17 @@ const CardTurnoAdmin = ({ index, turno, saveEdit, removeTurno, restoreTurno, rem
             <button className={styles.cancelBtn} onClick={() => cancelField()}>✘</button>
           </div>
         ) : (
-          <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("categoryId")} />
+          <>
+            {!isDisabled && <img src={IconEdit} className={styles.editIcon} onClick={() => startFieldEdit("categoryId")} />}
+          </>
         )}
       </div>
 
       {/* RIMUOVI - RIPRISTINA */}
       <div className={styles.actions}>
         {isDisabled && <button onClick={() => requestConfirm("ripristina")} className={styles.ripristinaBtn}>Ripristina</button> }
-        <button onClick={() => requestConfirm(isDisabled?"removeHard":"remove")} className={styles.removeBtn}>Rimuovi</button>
+        {!isDisabled && <button onClick={() => requestConfirm("remove")} className={styles.softRemoveBtn}>Rimuovi</button> }
+        {isDisabled && <button onClick={() => requestConfirm("removeHard")} className={styles.removeBtn}>Elimina</button>}
       </div>
 
       {/* POPUP */}

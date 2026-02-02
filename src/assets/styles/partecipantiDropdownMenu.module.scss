@@ -12,6 +12,8 @@
 //   width: 100%;
 // }
 
+.container{
+
 /* ---------------------------- */
 /*    INPUT ATTIVO MODIFICA     */
 /* ---------------------------- */
@@ -91,6 +93,7 @@
   color: $color-text;
   font-weight: bold;
   width: 1rem;
+  padding: 0px;
 
   &:hover {
     background: color.scale($color-success, $lightness: -10%);
@@ -106,6 +109,7 @@
   color: $color-text;
   font-weight: bold;
   width: 1rem;
+  padding: 0px;
 
   &:hover {
     background: color.scale($color-error, $lightness: -10%);
@@ -207,4 +211,6 @@
 
 .removeBtn:hover {
   background: rgba(231, 76, 60, 0.2);
+}
+
 }

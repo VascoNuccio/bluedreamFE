@@ -49,19 +49,24 @@ const GestoreTurniAdmin = ({ dateKey, day, monthName, turni = [], onCancel, setT
       });
   };
 
-
   const removeTurno = (turno) => {
     if (!turno?.id) return;
 
     cancelEvent(turno.id)
       .then(() => {
-        const updatedTurni = turni.filter(t => t.id !== turno.id);
+        const updatedTurni = turni.map(t =>
+          t.id === turno.id
+            ? { ...t, status: "CANCELLED" } // o quello che ritorna il backend
+            : t
+        );
+
         setTurniForDate(updatedTurni, { replace: true });
       })
       .catch(() => {
         console.error("Non è stato possibile rimuovere il turno");
       });
   };
+
 
   const removeTurnoHard = (turno) => {
     if (!turno?.id) return;

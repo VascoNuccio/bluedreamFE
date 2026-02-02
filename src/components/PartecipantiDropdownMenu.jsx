@@ -5,12 +5,12 @@ import IconEdit from "@/assets/modifica.svg";
 import styles from "@/assets/styles/partecipantiDropdownMenu.module.scss";
 import { useAuth } from '@/context/AuthContext';
 
-const PartecipantiSelector = ({turno, onChange, isDisabled = true, placeholder }) => {
+const PartecipantiSelector = ({turno = {}, onChange, isDisabled = false, isOpenEdit = false,placeholder, jumpQuery }) => {
   const { getAllUsers, deletePartecipantiOnTurno, addPartecipantiOnTurno } = useAuth();
 
-  const [selected, setSelected] = useState(turno.partecipanti || []);
+  const [selected, setSelected] = useState([...turno?.partecipanti ?? []]);
   const [search, setSearch] = useState("");
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(isOpenEdit);
   const [showDropdown, setShowDropdown] = useState(false);
   const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [confirmData, setConfirmData] = useState(null);
@@ -27,8 +27,9 @@ const PartecipantiSelector = ({turno, onChange, isDisabled = true, placeholder }
   }, []);
 
   useEffect(() => {
-    setSelected(turno.partecipanti || []);
-  }, [turno.partecipanti]);
+    setSelected([...turno?.partecipanti ?? []]);
+  }, [turno?.partecipanti]);
+
 
   const removePartecipante = (email) => {
     setConfirmData({ email, message: "Confermi la rimozione del partecipante?", error: false });
@@ -36,6 +37,31 @@ const PartecipantiSelector = ({turno, onChange, isDisabled = true, placeholder }
 
   const confirmRemove = () => {
     if (!confirmData.email) return;
+
+    if(jumpQuery && jumpQuery.onRemove) {
+      const userId = users.find(u => u.email === confirmData.email)?.id;
+      if (!userId) {
+        setConfirmData({email, message: "Non esiste l'utente selezionato", error: true });
+        return;
+      }
+
+      // aggiorno lo stato LOCALMENTE (optimistic update)
+      const updatedPartecipanti = selected.filter(
+        p => p !== confirmData.email
+      );
+      const updatedPartecipantiId = updatedPartecipanti
+        .map(email => users.find(u => u.email === email)?.id)
+        .filter(id => id !== undefined); // rimuove eventuali email non trovate
+      
+      setSelected(updatedPartecipanti);
+
+      setSearch("");
+      setSuggestedUsers([]);
+      setShowDropdown(false);
+
+      jumpQuery.onRemove(updatedPartecipantiId);
+      return;
+    }
 
     const userId = users.find(u => u.email === confirmData.email)?.id;
     if (!userId) {
@@ -83,12 +109,37 @@ const PartecipantiSelector = ({turno, onChange, isDisabled = true, placeholder }
 
   const addUser = (user) => {
 
+    if(jumpQuery && jumpQuery.onAdd) {
+      const userId = users.find(u => u.email === user.email)?.id;
+      if (!userId) {
+        setConfirmData({email, message: "Non esiste l'utente selezionato", error: true });
+        return;
+      }
+
+      // evita duplicati
+      if (selected.includes(user.email)) {setShowDropdown(false); return;};
+    
+      const updatedPartecipanti = [...selected, user.email];
+      const updatedPartecipantiId = updatedPartecipanti
+        .map(email => users.find(u => u.email === email)?.id)
+        .filter(id => id !== undefined); // rimuove eventuali email non trovate
+    
+      setSelected(updatedPartecipanti);
+
+      setSearch("");
+      setSuggestedUsers([]);
+      setShowDropdown(false);
+
+      jumpQuery.onAdd(updatedPartecipantiId);
+      return;
+    }
+
     if (turno.id && typeof user === "object" && user.id) {
       // query DB insert partecipante
       addPartecipantiOnTurno(turno.id, [user.id])
         .then(() => {
           // evita duplicati
-          if (selected.some(u => u.id === user.id)) return;
+          if (selected.includes(user.email)) {setShowDropdown(false); return;};
         
           const updatedPartecipanti = [...selected, user.email];
         
@@ -110,7 +161,7 @@ const PartecipantiSelector = ({turno, onChange, isDisabled = true, placeholder }
   const cancelEdit = () => {
     setSearch("");
     setSuggestedUsers([]);
-    setEditing(false);
+    setEditing(isOpenEdit);
   };
 
   return (
@@ -125,7 +176,7 @@ const PartecipantiSelector = ({turno, onChange, isDisabled = true, placeholder }
             className={styles.disabledInput}
             value={selected.join(", ")}
           />
-          {isDisabled && <img src={IconEdit} className={styles.editIcon} onClick={() => setEditing(true)} />}
+          {!isDisabled && <img src={IconEdit} className={styles.editIcon} onClick={() => setEditing(true)} />}
         </div>
       )}
 
@@ -140,7 +191,7 @@ const PartecipantiSelector = ({turno, onChange, isDisabled = true, placeholder }
             autoFocus
           />
 
-          <section className={styles.buttonGroup}>
+          {!jumpQuery?.isHideButton && <section className={styles.buttonGroup}>
             {/* ✔ conferma */}
             <button
               className={styles.saveBtn}
@@ -153,7 +204,7 @@ const PartecipantiSelector = ({turno, onChange, isDisabled = true, placeholder }
             <button className={styles.cancelBtn} onClick={cancelEdit}>
               ✘
             </button>
-          </section>
+          </section>}
 
           {/* DROPDOWN */}
           {editing && showDropdown && suggestedUsers.length > 0 && (

@@ -3,6 +3,7 @@ import styles from "@/assets/styles/gestoreTurniAdminFull.module.scss";
 import ConfirmPopup from "@/components/ConfirmPopUp";
 import { useAuth } from '@/context/AuthContext';
 import DropdownList from "@/components/DropdownList";
+import PartecipantiDropdownMenu from '@/components/PartecipantiDropdownMenu'
 
 const CardAddRecursiveEventAdmin = ({ callback }) => {
   const { createRecursiveEvent, getAllAdminEventCategory } = useAuth();
@@ -28,7 +29,9 @@ const CardAddRecursiveEventAdmin = ({ callback }) => {
     endTime: "",
     maxSlots: "",
     note: "",
-    categoryId: null
+    partecipanti: [],
+    categoryId: null,
+    userIds: []
   });
 
   useEffect(() => {
@@ -163,11 +166,6 @@ const CardAddRecursiveEventAdmin = ({ callback }) => {
   };
 
   const confirmAddNewTurno = () => {
-    setConfirmData({
-      message: "Turni creati con successo",
-      error: false,
-      isFinish: true
-    });
 
     // save db nuovo turno
     createRecursiveEvent(newTurno).then((data) => {
@@ -183,8 +181,11 @@ const CardAddRecursiveEventAdmin = ({ callback }) => {
         endTime: "",
         maxSlots: "",
         note: "",
-        categoryId: categorySelected ? categorySelected.id : null
+        partecipanti: [],
+        categoryId: categorySelected ? categorySelected.id : null,
+        userIds: []
       });
+      callback();
     }).catch((err) => {
       console.log("sono dentro error: ",err)
       setConfirmData({ message: err.message||"Errore: turno non salvato", error: true });
@@ -195,6 +196,27 @@ const CardAddRecursiveEventAdmin = ({ callback }) => {
     if(confirmData.isFinish) callback();
     setConfirmData(null);
   } 
+
+  const handleAddPartecipante = (updatedPartecipantiId) => {
+    console.log("handleAddPartecipante: ",updatedPartecipantiId);
+    setNewTurno(prev => {
+      return {
+        ...prev,
+        userIds: updatedPartecipantiId,
+      };
+    });
+  };
+
+
+  const handleRemovePartecipante = (updatedPartecipantiId) => {
+    console.log("handleRemovePartecipante: ",updatedPartecipantiId);
+    setNewTurno(prev => {
+      return {
+        ...prev,
+        userIds: updatedPartecipantiId,
+      };
+    });
+  }
 
   return (
     <div className={styles.addSection}>
@@ -267,6 +289,16 @@ const CardAddRecursiveEventAdmin = ({ callback }) => {
         placeholder="Note aggiuntive"
         value={newTurno.note}
         onChange={(e) => handleChange("note", e.target.value)}
+      />
+
+      <PartecipantiDropdownMenu
+        isOpenEdit={true}
+        turni={newTurno}
+        jumpQuery={{
+          onAdd: (value) => handleAddPartecipante(value),
+          onRemove: (value) => handleRemovePartecipante(value),
+          isHideButton: true
+        }}
       />
 
       <DropdownList

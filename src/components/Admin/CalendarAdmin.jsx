@@ -212,8 +212,8 @@ const CalendarAdmin = () => {
             </div>
           </div>
           <section className={styles.add_recursive_day}>
-            <Collapse title="Aggiungi eventi ricorsivi" style={{width: '100%'}}>
-              <CardAddRecursiveEventAdmin callback={()=>setRefresh(!refresh)}/>
+            <Collapse title="Aggiungi eventi ricorsivi" style={{width: '100%'}} >
+              <CardAddRecursiveEventAdmin key={refresh} callback={()=>{setRefresh(!refresh)}}/>
             </Collapse>
           </section>
         </>

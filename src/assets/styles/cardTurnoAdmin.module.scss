@@ -96,6 +96,20 @@
   }
 }
 
+.softRemoveBtn {
+  background: $color-warning;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: $color-text;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    background: color.scale($color-warning, $lightness: -10%);
+  }
+}
+
 .removeBtn {
   background: $color-error;
   border: none;
