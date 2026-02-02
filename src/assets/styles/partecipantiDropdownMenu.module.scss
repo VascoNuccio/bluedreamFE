@@ -1,217 +1,213 @@
 @use "_variables" as *;
 @use "sass:color";
 
-// .container {
-//   display: flex;
-//   flex-direction: column;
-//   gap: 16px;
-//   padding: 18px;
-//   background: $color-bg;
-//   border-radius: 12px;
-//   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-//   width: 100%;
-// }
-
 .container{
 
-/* ---------------------------- */
-/*    INPUT ATTIVO MODIFICA     */
-/* ---------------------------- */
+  /* ---------------------------- */
+  /*    INPUT ATTIVO MODIFICA     */
+  /* ---------------------------- */
 
-.addContainer {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  .addContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+      input {
+      flex: 1;
+      padding: 6px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      background: $color-bg;
+      color: $color-text;
+
+      &::placeholder {
+        color: #999;
+      }
+    }
+  }
+
+  /* ---------------------------- */
+  /*    INPUT DISABILITATO + MATITA */
+  /* ---------------------------- */
+
+  .editHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 
     input {
-    flex: 1;
-    padding: 6px;
-    border-radius: 6px;
+      flex: 1;
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background: $color-bg;
+      color: $color-text;
+
+      &::placeholder {
+        color: #999;
+      }
+
+      &:disabled {
+        opacity: 0.6;
+      }
+    }
+  }
+
+  .editIcon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 0.85;
+    transition: 0.15s ease;
+
+    &:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+  }
+
+  .buttonGroup {
+    display: flex;
+    gap: 0.2rem;
+  } 
+
+  .saveBtn {
+    background: $color-success;
     border: none;
-    outline: none;
-    background: $color-bg;
-    color: $color-text;
-
-    &::placeholder {
-      color: #999;
-    }
-  }
-}
-
-/* ---------------------------- */
-/*    INPUT DISABILITATO + MATITA */
-/* ---------------------------- */
-
-.editHeader {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  input {
-    flex: 1;
-    padding: 6px;
+    // padding: 6px 10px;
     border-radius: 6px;
-    border: 1px solid #444;
-    background: $color-bg;
+    cursor: pointer;
     color: $color-text;
+    font-weight: bold;
+    width: 1rem;
+    padding: 0px;
 
-    &::placeholder {
-      color: #999;
+    &:hover {
+      background: color.scale($color-success, $lightness: -10%);
     }
+  }
 
-    &:disabled {
-      opacity: 0.6;
+  .cancelBtn {
+    background: $color-error;
+    border: none;
+    // padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: $color-text;
+    font-weight: bold;
+    width: 1rem;
+    padding: 0px;
+
+    &:hover {
+      background: color.scale($color-error, $lightness: -10%);
     }
   }
-}
 
-.editIcon {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  opacity: 0.85;
-  transition: 0.15s ease;
-
-  &:hover {
-    opacity: 1;
-    transform: scale(1.1);
+  /* CHECK ✔ e X accanto all’input */
+  .addConfirmBtn,
+  .addCancelBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.3rem;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
   }
-}
 
-.buttonGroup {
-  display: flex;
-  gap: 0.2rem;
-} 
-
-.saveBtn {
-  background: $color-success;
-  border: none;
-  // padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  color: $color-text;
-  font-weight: bold;
-  width: 1rem;
-  padding: 0px;
-
-  &:hover {
-    background: color.scale($color-success, $lightness: -10%);
+  .addConfirmBtn {
+    color: $color-success;
   }
-}
 
-.cancelBtn {
-  background: $color-error;
-  border: none;
-  // padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  color: $color-text;
-  font-weight: bold;
-  width: 1rem;
-  padding: 0px;
-
-  &:hover {
-    background: color.scale($color-error, $lightness: -10%);
+  .addConfirmBtn:hover {
+    background: rgba(46, 204, 113, 0.15);
   }
-}
 
-/* CHECK ✔ e X accanto all’input */
-.addConfirmBtn,
-.addCancelBtn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.3rem;
-  padding: 4px 6px;
-  border-radius: 6px;
-  transition: background 0.2s;
-}
+  .addCancelBtn {
+    color: $color-error;
+  }
 
-.addConfirmBtn {
-  color: $color-success;
-}
+  .addCancelBtn:hover {
+    background: rgba(231, 76, 60, 0.15);
+  }
 
-.addConfirmBtn:hover {
-  background: rgba(46, 204, 113, 0.15);
-}
+  /* ---------------------------- */
+  /*    DROPDOWN SUGGERIMENTI     */
+  /* ---------------------------- */
 
-.addCancelBtn {
-  color: $color-error;
-}
+  .dropdown {
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    right: 0;
+    background: $color-bg;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 20;
+    max-width: 400px;
+    max-height: 220px;
+    overflow-y: auto;
+    overflow-x: auto;
+  }
 
-.addCancelBtn:hover {
-  background: rgba(231, 76, 60, 0.15);
-}
+  .dropdownRow {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.5rem;
+    color: $color-text;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+    gap: 1rem;
+  }
 
-/* ---------------------------- */
-/*    DROPDOWN SUGGERIMENTI     */
-/* ---------------------------- */
+  .dropdownRow:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
 
-.dropdown {
-  position: absolute;
-  top: 2rem;
-  left: 0;
-  right: 0;
-  background: $color-bg;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 20;
-  max-height: 220px;
-  overflow-y: auto;
-  width: fit-content;
-}
+  /* ---------------------------- */
+  /*    LISTA PARTECIPANTI        */
+  /* ---------------------------- */
 
-.dropdownRow {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 0.5rem;
-  color: $color-text;
-  font-size: 0.95rem;
-  transition: background 0.2s;
-  gap: 1rem;
-}
+  .selectedList {
+    display: flex;
+    gap: 0.5rem;
+    overflow-y: auto;
+  }
 
-.dropdownRow:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
+  .selectedItem {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0.5rem 0;
+    background: $color-theme;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: $color-text;
+  }
 
-/* ---------------------------- */
-/*    LISTA PARTECIPANTI        */
-/* ---------------------------- */
+  .removeBtn {
+    background: transparent;
+    border: none;
+    color: $color-error;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
 
-.selectedList {
-  display: flex;
-  gap: 0.5rem;
-  overflow-y: auto;
-}
+  .removeBtn:hover {
+    background: rgba(231, 76, 60, 0.2);
+  }
 
-.selectedItem {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 0.5rem 0;
-  background: $color-theme;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  color: $color-text;
-}
-
-.removeBtn {
-  background: transparent;
-  border: none;
-  color: $color-error;
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: background 0.2s;
-}
-
-.removeBtn:hover {
-  background: rgba(231, 76, 60, 0.2);
-}
+  /*RESPONSIVE*/
+  @media (max-width: 768px) {
+  }
 
 }
+
+

@@ -211,8 +211,10 @@ const PartecipantiSelector = ({turno = {}, onChange, isDisabled = false, isOpenE
             <div className={styles.dropdown}>
               {suggestedUsers.map((u) => (
                 <div key={u.id} className={styles.dropdownRow}>
-                  <span>{u.firstName} {u.lastName}</span>
-                  <small>{u.email}</small>
+                  <div style={{display: "flex", flexDirection: "column"}}>
+                    <span>{u.firstName} {u.lastName}</span>
+                    <small>{u.email}</small>
+                  </div>
 
 
                   <section className={styles.buttonGroup} >
@@ -235,19 +237,32 @@ const PartecipantiSelector = ({turno = {}, onChange, isDisabled = false, isOpenE
       )}
 
       {/* LISTA PARTECIPANTI */}
-      {editing && <div className={styles.selectedList}>
-        {selected.map((email) => (
-          <div key={email} className={styles.selectedItem}>
-            <span>{email}</span>
-            <button
-              className={styles.removeBtn}
-              onClick={() => removePartecipante(email)}
-            >
-              ✘
-            </button>
-          </div>
-        ))}
-      </div>}
+      {editing && (
+        <div className={styles.selectedList}>
+          {selected.map((email) => {
+            const user = users.find(u => u.email === email);
+          
+            return (
+              <div key={email} className={styles.selectedItem}>
+                <div style={{display: "flex", flexDirection: "column"}}>
+                  <span>
+                    {user
+                      ? `${user.firstName} ${user.lastName}`
+                      : email}
+                  </span>
+                  <small>{email}</small>
+                </div>
+                  
+                <button
+                  className={styles.removeBtn}
+                  onClick={() => removePartecipante(email)}
+                >
+                  ✘
+                </button>
+              </div>
+            );
+          })}
+        </div>)}
 
       {/* POPUP CONFERMA */}
       {confirmData && (
