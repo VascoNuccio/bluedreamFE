@@ -185,6 +185,7 @@
 .selectedList {
   display: flex;
   gap: 0.5rem;
+  overflow-y: auto;
 }
 
 .selectedItem {
