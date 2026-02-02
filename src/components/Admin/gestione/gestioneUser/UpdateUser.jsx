@@ -40,6 +40,7 @@ import ConfirmPopUp from '@/components/ConfirmPopUp';
         lastName: selectedUser.lastName ?? '',
         role: selectedUser.role ?? 'USER',
         status: selectedUser.status ?? 'SUBSCRIBED',
+        medicalCertificateExpiryDate: selectedUser.medicalCertificateExpiryDate ?? undefined,
       
         // Subscription
         id: activeSub.id? activeSub.id: undefined,
@@ -323,6 +324,9 @@ import ConfirmPopUp from '@/components/ConfirmPopUp';
                 text={selectedUser.status}
                 onChange={(value) => handleChangeStatus("status",value)}
               />
+              
+              <label>Data Scadenza Certificato Medico:</label>
+              <input type="date" name='medicalCertificateExpiryDate' value={selectedUser.medicalCertificateExpiryDate ? selectedUser.medicalCertificateExpiryDate.split('T')[0] : ''} onChange={handleChangeUser}/>
 
               <h4>Subscription Details</h4>
               <hr />

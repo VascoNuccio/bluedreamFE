@@ -31,6 +31,7 @@ const CreateUserForm = ({data, createUser, callback}) => {
       "firstName": "",
       "lastName": "",
       "role": ROLE_USER,
+      "medicalCertificateExpiryDate": "",
       "startDate": formatDateForInput(today),
       "endDate": formatDateForInput(addMonths(today, SUBSCRIPTION_MONTHS)),
       "amount": "",
@@ -150,6 +151,8 @@ const CreateUserForm = ({data, createUser, callback}) => {
         text={newUser.role} 
         onChange={(value) => handleChange("role", value)}
       />
+      <label>Data Scadenza Certificato Medico:</label>
+      <input type="date" placeholder="yyyy-mm-dd" name='medicalCertificateExpiryDate' value={newUser.medicalCertificateExpiryDate} onChange={handeChangeUser}/>
       <h4 style={{paddingTop: "1rem"}}>Subscription Details</h4>
       <hr/>
       <label>Amount:</label>

@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import styles from "@/assets/styles/calendar.module.scss";
 import { useAuth } from "@/context/AuthContext";
-import CalendarUserPopup from "./CalendarUserPopUp";
+import CalendarUserPopup from "@/components/User/CalendarUserPopUp";
+import ConfirmPopUp from '@/components/ConfirmPopUp'
 
 const pad2 = (n) => String(n).padStart(2, "0");
 const makeKey = (y, m, d) => `${y}-${pad2(m)}-${pad2(d)}`;
 
 const Calendar = () => {
-  const { user, getCalendarEvents, getDayEvents } = useAuth();
+  const { user, getCalendarEvents, getDayEvents, handleLogout } = useAuth();
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(null);
@@ -29,6 +30,24 @@ const Calendar = () => {
     today.getMonth() + 1,
     today.getDate()
   );
+
+  const isMedicalExpired = useMemo(() => {
+    if (!user?.medicalCertificateExpiryDate) return true;
+
+    const expiryDate = new Date(user.medicalCertificateExpiryDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return expiryDate < today;
+  }, [user?.medicalCertificateExpiryDate]);
+
+  const [isMedicalCertificateExpiryDate, setMedicalCertificateExpiryDate] = useState(false);
+
+  useEffect(() => {
+    if (isMedicalExpired) {
+      setMedicalCertificateExpiryDate(true);
+    }
+  }, [isMedicalExpired]);
 
   /* =========================
      CAMBIO MESE
@@ -245,6 +264,13 @@ const Calendar = () => {
           }}
         />
       )}
+
+      {isMedicalCertificateExpiryDate && 
+        <ConfirmPopUp 
+          message={"ATTENZIONE, il tuo Certificato Medico è scaduto! Per favore procedi subito al rinnovo."} 
+          onCancel={handleLogout} 
+          isError={true} 
+        />}
     </div>
   );
 };
